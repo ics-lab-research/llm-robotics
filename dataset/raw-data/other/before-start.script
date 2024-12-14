@@ -1,0 +1,43 @@
+
+def beforestart():
+  global _hidden_verificationVariable=0
+  step_count_f5b51f0c_4365_410e_844e_85abb40d34c3 = 0.0
+  thread Step_Counter_Thread_6336083a_980d_4b96_bd1e_426122f1dec4():
+    while (True):
+      step_count_f5b51f0c_4365_410e_844e_85abb40d34c3 = step_count_f5b51f0c_4365_410e_844e_85abb40d34c3 + 1.0
+      sync()
+    end
+  end
+  run Step_Counter_Thread_6336083a_980d_4b96_bd1e_426122f1dec4()
+  set_gravity([0.0, 0.0, 9.82])
+  set_safety_mode_transition_hardness(1)
+  set_target_payload(1.000000, [0.000000, 0.000000, 0.000000], [0.001539, 0.001539, 0.001539, 0.000000, 0.000000, 0.000000])
+  set_tcp(p[0.0,0.0,0.0,0.0,0.0,0.0])
+  set_tool_communication(False, 115200, 0, 1, 1.5, 3.5)
+  set_tool_output_mode(0)
+  set_tool_digital_output_mode(0, 1)
+  set_tool_digital_output_mode(1, 1)
+  set_tool_voltage(0)
+  set_standard_analog_input_domain(0, 1)
+  set_standard_analog_input_domain(1, 1)
+  set_tool_analog_input_domain(0, 1)
+  set_tool_analog_input_domain(1, 1)
+  set_analog_outputdomain(0, 0)
+  set_analog_outputdomain(1, 0)
+  set_input_actions_to_default()
+  global i_var_1=10
+  global Waypoint_1_p=p[-.136861537556, -.267180821738, .146971261118, -.001221359682, 3.116276528482, .038891915637]
+  global Waypoint_1_q=[-1.6006999999999998, -1.7271, -2.2029999999999994, -0.8079999999999998, 1.5951, -0.030999999999999694]
+  global Waypoint_2_p=p[-.136861537556, -.267180821728, .224813594454, -.001221359682, 3.116276528482, .038891915637]
+  global Waypoint_2_q=[-1.6006999999416252, -1.5257970446560227, -1.9808041812272563, -1.2314987741153, 1.5951000000015014, -0.03099999994162772]
+  $ 1 "BeforeStart"
+  $ 2 "MoveJ"
+  $ 3 "Waypoint_1" "breakAfter"
+  movej(get_inverse_kin(Waypoint_1_p, qnear=Waypoint_1_q), a=1.3962634015954636, v=1.0471975511965976)
+  while (True):
+    $ 4 "Robot Program"
+    $ 5 "MoveJ"
+    $ 6 "Waypoint_2" "breakAfter"
+    movej(get_inverse_kin(Waypoint_2_p, qnear=Waypoint_2_q), a=1.3962634015954636, v=1.0471975511965976)
+  end
+end

@@ -1,0 +1,20 @@
+Here's a function in URscript that allow you to move UR robot between 2 waypoints linear in tool-space given tool position, using active TCP and time to make move:
+
+```URscript
+def move_linear():
+  local Waypoint_1_p=p[-0.13, -0.26, 0.14, -0.001, 3.11, 0.03] 
+  local Waypoint_2_p=p[-0.008, -0.26, 0.28, -0.27, -2.71, 0.217] 
+
+  while (True):
+    movel(Waypoint_1_p, a=1.2, v=0.25, t=2.0)
+	movel(Waypoint_2_p, a=0.78, v=0.87, t=3.0)
+  end
+end
+```
+
+### Explaination:
+1. `Waypoint_1_p`: tool position or pose (x, y, x, Rx, Ry, Rz) of waypoint_1
+2. `Waypoint_2_p`: tool position (x, y, x, Rx, Ry, Rz) of waypoint_2
+3. `movel()`: command move robot to position linear in tool-space, given tool acceleration(a) and tool speed(v), time to make move (t)
+
+You can modify the necessary parameters such as joint positions, or the velocity and acceleration of the movel() function.

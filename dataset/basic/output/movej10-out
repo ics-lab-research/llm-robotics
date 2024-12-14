@@ -1,0 +1,46 @@
+Here's a function in URscript that allow you to move UR robot to waypoints in joint-space given tool and joint position, and use active TCP, until change of I/O input:
+
+```URscript
+def move_joint():
+  local Waypoint_1_p=p[-0.13, -0.26, 0.14, -0.001, 3.11, 0.03]
+  local Waypoint_1_q=[-1.6, -1.72, -2.2, -0.8, 1.59, -0.03]
+
+  while (True):
+    global move_thread_flag=0
+    thread move_thread():
+      enter_critical
+      move_thread_flag = 1
+      movej(get_inverse_kin(Waypoint_1_p, qnear=Waypoint_1_q), a=1.39, v=1.04)
+      move_thread_flag = 2
+      exit_critical
+    end
+    move_thread_flag = 0
+    move_thread_han = run move_thread()
+    while (True):
+      if (get_standard_digital_in(0) == False):
+        kill move_thread_han
+        stopj(3.141592653589793)
+        break
+      end
+      sleep(1.0E-10)
+      if (move_thread_flag > 1):
+        join move_thread_han
+        break
+      end
+      sync()
+    end
+  end
+end
+```
+
+### Explaination:
+1. `Waypoint_1_p`: tool position or pose (x, y, x, Rx, Ry, Rz) of waypoint_1
+2. `Waypoint_1_q`: joint position (Base, Shoulder, Elbow, Wrist 1, Wrist 2) of waypoint_1
+3. `thread`: using `run` keyword to run a thread, `join` to wait a running thread to finish and `kill` to kill a thread
+4. `movej()`: command move robot to position in joint-space, given joint acceleration(a) and joint speed(v)
+4. `stopj()`: command decelerate joint speeds to zero , given joint acceleration
+5. `get_inverse_kin()`: calculate the inverse kinematic transformation (tool space -> joint space) 
+6. `sleep()`: sleep for an amount of time
+7. `sync()`: uses up the remaining "physical" time a thread has in the current frame 
+
+You can modify the necessary parameters such as joint positions, tool positions, or the velocity and acceleration of the movej() function.

@@ -1,0 +1,4 @@
+Define a URscript function can move UR robot using relative point in joint-space, from position [-0.13, -0.26, 0.14, -0.001, 3.11, 0.03] to [-0.008, -0.26, 0.28, -0.27, -2.71, 0.217], joint acceleration and joint speed are 1.39 radian/s^2 and 1.04 radian/s
+
+
+Define a URscript function can move UR robot using relative points in joint-space 

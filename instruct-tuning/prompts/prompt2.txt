@@ -1,0 +1,14 @@
+You are asked to come up with a set of 20 diverse URScript programming task instructions. These task instructions will be evaluated based on their ability to test the capabilities of a GPT model in generating URScript code for robotics tasks.  
+
+Here are the requirements:  
+1. Ensure diversity in the verbs used for each instruction to maximize variation.  
+2. Use a variety of linguistic styles, combining questions with imperative instructions.  
+3. Cover diverse types of programming tasks, such as open-ended code generation, optimization, debugging, refactoring, and creating examples.  
+4. Focus exclusively on tasks related to URScript, ensuring they are realistic and align with common robotics applications (e.g., motion planning, sensor integration, error handling, etc.).  
+5. Avoid asking for non-URScript outputs or tasks that require external multimedia creation or execution (e.g., visuals, audio, or real-world actions).  
+6. Instructions should be in English and at least 1–2 sentences long.  
+7. Provide appropriate input data where necessary. Inputs should contain realistic and specific examples relevant to the instruction but should not exceed 100 words. When no input context is needed, use "<noinput>".  
+8. Ensure outputs demonstrate correct and practical URScript implementations.  
+9. Use '###' to separate tasks clearly.  
+
+List of 20 tasks:

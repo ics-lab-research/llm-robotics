@@ -1,0 +1,53 @@
+# movep: 
+# Set tcp: Use active tcp
+# Tool speed : 250mm/s 
+# Tool acceleration : 1200mm/s2 
+# Blend with radius: 25mm
+# waypoint1: feature view, xyz-RxRyRz (radian), Joint positions (degree) 
+# Use shared blend radius
+# use shared parameters
+# CircleMove: Unconstrained
+
+def unnamed():
+  global _hidden_verificationVariable=0
+  step_count_ac8f1428_20c9_4a11_9ad0_dea55935d903 = 0.0
+  thread Step_Counter_Thread_69af334b_b9fd_470e_a038_70c70d09c98e():
+    while (True):
+      step_count_ac8f1428_20c9_4a11_9ad0_dea55935d903 = step_count_ac8f1428_20c9_4a11_9ad0_dea55935d903 + 1.0
+      sync()
+    end
+  end
+  run Step_Counter_Thread_69af334b_b9fd_470e_a038_70c70d09c98e()
+  set_target_payload(1.000000, [0.000000, 0.000000, 0.000000], [0.001539, 0.001539, 0.001539, 0.000000, 0.000000, 0.000000])
+  set_tcp(p[0.0,0.0,0.0,0.0,0.0,0.0])
+  set_tool_communication(False, 115200, 0, 1, 1.5, 3.5)
+  set_tool_output_mode(0)
+  set_tool_digital_output_mode(0, 1)
+  set_tool_digital_output_mode(1, 1)
+  set_tool_voltage(0)
+  set_safety_mode_transition_hardness(1)
+  set_standard_analog_input_domain(0, 1)
+  set_standard_analog_input_domain(1, 1)
+  set_tool_analog_input_domain(0, 1)
+  set_tool_analog_input_domain(1, 1)
+  set_analog_outputdomain(0, 0)
+  set_analog_outputdomain(1, 0)
+  set_input_actions_to_default()
+  set_gravity([0.0, 0.0, 9.82])
+  global Waypoint_1_p=p[-.060381800089, -.219270763095, .169093885579, .064218876927, 3.140936198736, -.000000000000]
+  global Waypoint_1_q=[-1.2254223461002605, -1.2630306261142463, -2.492154757542977, -0.9572035889841395, 1.5707963462688286, 0.38625983571558775]
+  global ViaPoint_1_p=p[.017911866563, -.187628429732, .140351552223, .064218876927, 3.140936198736, .000000000000]
+  global ViaPoint_1_q=[-0.7067915558080831, -1.0737668960847042, -2.74433758548414, -0.8942844823090761, 1.5707963399443798, 0.9048906260077536]
+  global EndPoint_1_p=p[.027811866479, -.198428429719, .201493885497, .064218877053, 3.140936204907, .000000000000]
+  global EndPoint_1_q=[-0.7186213401085704, -0.9642157274643459, -2.4546365255170977, -1.2935367110555944, 1.5707963401362903, 0.8930608417072593]
+  while (True):
+    $ 1 "Robot Program"
+    $ 2 "MoveP"
+    $ 3 "Waypoint_1" "breakAfter"
+    movep(Waypoint_1_p, a=1.2, v=0.25, r=0.025)
+    $ 4 "CircleMove"
+    $ 5 "ViaPoint_1" "noBreak"
+    $ 6 "EndPoint_1" "breakAfter"
+    movec(ViaPoint_1_p, EndPoint_1_p, a=1.2, v=0.25, r=0.025)
+  end
+end

@@ -1,0 +1,93 @@
+# stack 
+# the next position is found when: di[0]=1
+# item thickness: 10mm
+# tool speed: 250mm/s
+# tool acceleration: 1200mm/s2
+# start_pos1
+# direction: stop when 200mm, frompos_1 -> topos_1
+# placesequence: 
+# stackpos_1
+# set do[0]=off
+# wait 5.0
+# exit_1
+
+
+def unnamed():
+  global _hidden_verificationVariable=0
+  step_count_f5b51f0c_4365_410e_844e_85abb40d34c3 = 0.0
+  thread Step_Counter_Thread_6336083a_980d_4b96_bd1e_426122f1dec4():
+    while (True):
+      step_count_f5b51f0c_4365_410e_844e_85abb40d34c3 = step_count_f5b51f0c_4365_410e_844e_85abb40d34c3 + 1.0
+      sync()
+    end
+  end
+  run Step_Counter_Thread_6336083a_980d_4b96_bd1e_426122f1dec4()
+  set_gravity([0.0, 0.0, 9.82])
+  set_safety_mode_transition_hardness(1)
+  set_target_payload(1.000000, [0.000000, 0.000000, 0.000000], [0.001539, 0.001539, 0.001539, 0.000000, 0.000000, 0.000000])
+  set_tcp(p[0.0,0.0,0.0,0.0,0.0,0.0])
+  set_tool_communication(False, 115200, 0, 1, 1.5, 3.5)
+  set_tool_output_mode(0)
+  set_tool_digital_output_mode(0, 1)
+  set_tool_digital_output_mode(1, 1)
+  set_tool_voltage(0)
+  set_standard_analog_input_domain(0, 1)
+  set_standard_analog_input_domain(1, 1)
+  set_tool_analog_input_domain(0, 1)
+  set_tool_analog_input_domain(1, 1)
+  set_analog_outputdomain(0, 0)
+  set_analog_outputdomain(1, 0)
+  set_input_actions_to_default()
+  global i_var_1=10
+  global interpolate_1=0.0
+  global StartPos_1_p=p[-.136861537556, -.267180821728, .224813594454, -.001221359682, 3.116276528482, .038891915637]
+  global StartPos_1_q=[-1.6006999999416252, -1.5257970446560227, -1.9808041812272563, -1.2314987741153, 1.5951000000015014, -0.03099999994162772]
+  global FromPos_1_p=p[-.031819204224, -.193338488387, .224813594443, -.001221359682, 3.116276528480, .038891915639]
+  global FromPos_1_q=[-1.0228183959125685, -0.9203905548323528, -2.353461787094261, -1.4467944011079794, 1.6051973610263137, 0.5470520201825126]
+  global ToPos_1_p=p[-.031819204270, -.193338488311, .307055927749, -.513882145178, 3.078036377723, .044845226263]
+  global ToPos_1_q=[-1.020036452999972, -0.9461261269700394, -1.952450027401686, -1.8326939579521682, 1.6007162895329747, 0.21962619149429852]
+  global StackPos_1_p=p[.138023129087, -.193338488234, .307055927698, -.513882145178, 3.078036377721, .044845226267]
+  global StackPos_1_q=[-0.3827470786015841, -1.1601477010343242, -1.8699492154736328, -1.6796574203110533, 1.60607601593681, 0.8572445362880147]
+  global Exit_1_p=p[.138023129079, -.193338488232, .422998261021, -.513882145178, 3.078036377721, .044845226267]
+  global Exit_1_q=[-0.3827470784826854, -1.3338446288947097, -1.174171293256749, -2.201738414663364, 1.606076015936499, 0.8572445364069881]
+  while (True):
+    $ 1 "Robot Program"
+    $ 2 "Stack"
+    if (interpolate_1 == 0.0):
+      $ 3 "StartPos_1" "breakAfter"
+      movel(StartPos_1_p, a=1.2, v=0.25)
+      global ur_start_point_2=get_forward_kin()
+    else:
+      movel(p[ur_start_point_2[0]+interpolate_1*-5.632202147015118E-10, ur_start_point_2[1]+interpolate_1*9.175805862258509E-10, ur_start_point_2[2]+interpolate_1*1.0, ur_start_point_2[3],ur_start_point_2[4],ur_start_point_2[5]], a=1.2, v=0.25)
+    end
+    thread ur_Thread_direction_2():
+      movel(StartPos_1_p, a=1.2, v=0.01)
+      interpolate_1 = 0.0
+      sleep(0.1)
+      ur_stacking_motion_running_2 = False
+    end
+    ur_thread_handler_2 = run ur_Thread_direction_2()
+    ur_stacking_motion_running_2 = True
+    while (ur_stacking_motion_running_2 == True):
+      if ((get_standard_digital_in(0) == 1) or (interpolate_1==0.0)):
+        kill ur_thread_handler_2
+        ur_stacking_motion_running_2 = False
+        interpolate_1 = pose_dist(get_forward_kin(),ur_start_point_2)+0.01
+        stopl(1.2)
+        pose_1 = get_forward_kin()
+        $ 8 "StackPos_1" "breakAfter"
+        movel(pose_1, a=1.2, v=0.25)
+        $ 9 "Set DO[0]=Off"
+        set_standard_digital_out(0, False)
+        $ 10 "Wait: 5.0"
+        sleep(5.0)
+        $ 11 "Exit_1" "breakAfter"
+        movel(pose_trans(pose_1, pose_trans(pose_inv(StackPos_1_p),Exit_1_p)), a=1.2, v=0.25)
+        if ((interpolate_1>0.2)):
+          interpolate_1=0.0
+        end
+      end
+      sync()
+    end
+  end
+end

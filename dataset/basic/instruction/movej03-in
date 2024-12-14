@@ -1,0 +1,4 @@
+Define a URscript function can move UR robot between 2 waypoints in joint-space given joint position of waypoint_1 is [-1.6, -1.72, -2.2, -0.8, 1.59, -0.03], joint position of waypoint_2 is [-0.92, -1.26, -1.88, -1.73, 1.16, 0.88], joint acceleration and joint speed are 1.39 radian/s^2 and 1.04 radian/s^2 with waypoint_1, 0.78 radian/s^2 and 0.87 radian/s with waypoint_2, use joint angles instead pose (tool position)
+
+
+Define a URscript function can move UR robot between 2 waypoints in joint-space given tool and joint position, use joint angles instead pose (tool positions)

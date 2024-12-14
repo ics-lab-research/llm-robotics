@@ -1,0 +1,23 @@
+Here's a function in URscript that allow you to move UR robot to waypoints (move process) given tool position, and use active TCP, and then add circle move in unconstreained mode: 
+
+```URscript
+def move_process():
+  global Waypoint_1_p=p[-0.13, -0.26, 0.14, -0.001, 3.11, 0.03]
+  global ViaPoint_1_p=p[-0.08, -0.23, 0.14, -0.001, 3.11, 0.03]
+  global EndPoint_1_p=p[-0.03, -0.2, 0.17, 0.07, 3.11, 0.03]
+
+  while (True):
+    movep(Waypoint_1_p, a=1.2, v=0.25, r=0.025)
+    movec(ViaPoint_1_p, EndPoint_1_p, a=1.2, v=0.25, r=0.025)
+  end
+end
+```
+
+### Explaination:
+1. `Waypoint_1_p`: tool position or pose (x, y, x, Rx, Ry, Rz) of waypoint_1
+2. `ViaPoint_1_p`: tool position (x, y, x, Rx, Ry, Rz) of viapoint_1
+3. `EndPoint_1_p`: tool position (x, y, x, Rx, Ry, Rz) of endpoint_1
+4. `movep()`: move process, blend circular (in tool-space) and move linear (in tool-space) to position, given tool acceleration(a), tool speed(v) and blend radius (r)
+5. `movec()`: move curcular in tool-space, given tool acceleration(a), tool speed(v), blend radius (r) and mode (fixed of unconstrained)
+
+You can modify the necessary parameters such as joint positions, tool positions, or the velocity and acceleration of the movep() and movec() function.

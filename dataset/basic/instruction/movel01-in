@@ -1,0 +1,4 @@
+Define a URscript function can move UR robot between 2 waypoints linear in tool-space given tool position of waypoint_1 are [-0.13, -0.26, 0.14, -0.001, 3.11, 0.03], tool position of waypoint_2 are [-0.008, -0.26, 0.28, -0.27, -2.71, 0.217], tool acceleration and tool speed are 1.2 m/s^2 and 0.78 m/s with waypoint_1, 0.78 m/s^2 and 0.87 m/s with waypoint_2, we use active TCP
+
+
+Define a URscript function can move UR robot between 2 waypoints linear in tool-space given tool position, and use active TCP 

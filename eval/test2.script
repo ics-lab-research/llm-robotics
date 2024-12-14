@@ -1,0 +1,31 @@
+# Task 2: Move Through a Series of Waypoints
+def move_series():
+    local Waypoint_1_p=p[-0.13, -0.26, 0.14, -0.001, 3.11, 0.03]
+    local Waypoint_1_q=[-1.6, -1.72, -2.2, -0.8, 1.59, -0.03]
+    
+    local Waypoint_2_p=p[-0.08, -0.2, 0.21, -0.001, 3.11, 0.03]
+    local Waypoint_2_q=[-1.35, -1.15, -2.3, -1.27, 1.6, 0.21]
+
+    local Waypoint_3_p=p[0.05, -0.27, 0.28, -0.001, 3.11, 0.03]
+    local Waypoint_3_q=[-0.89, -1.37, -1.8, -1.53, 1.6, 0.67]
+
+    local Waypoint_4_p=p[0.05, -0.27, 0.38, -0.00, 3.11, 0.03]
+    local Waypoint_4_q=[-0.89, -1.44, -1.3, -1.96, 1.6, 0.67]
+
+    local Waypoint_5_p=p[0.05, -0.27, 0.09, -0.001, 3.11, 0.03]
+    local Waypoint_5_q=[-0.89, -1.91, -2.39, -0.41, 1.6, 0.67]
+
+    while (True):
+        movej(get_inverse_kin(Waypoint_1_p, qnear=Waypoint_1_q), a=1.39, v=1.04)
+        
+        movel(Waypoint_2_p, a=1.0, v=0.15)
+        
+        movep(Waypoint_3_p, a=1.2, v=0.25, r=0.0)
+        
+        movej(get_inverse_kin(Waypoint_4_p, qnear=Waypoint_4_q), a=1.39, v=1.04)
+        
+        movej(get_inverse_kin(Waypoint_5_p, qnear=Waypoint_5_q), a=1.39, v=1.04)
+    end
+end
+
+move_series()

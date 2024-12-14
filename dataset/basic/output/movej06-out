@@ -1,0 +1,21 @@
+Here's a function in URscript that allow you to move UR using relative points in joint-space:
+
+```URscript
+def move_joint_relative():
+  local Waypoint_1_from_p=p[-0.13, -0.26, 0.14, -0.001, 3.11, 0.03]
+  local Waypoint_1_to_p=p[-0.04, -0.2, 0.11, -0.004, 3.11, -0.18]
+  while (True):
+    movej(pose_add(get_target_tcp_pose(), pose_sub(Waypoint_1_to_p, Waypoint_1_from_p)), a=1.39, v=1.04)
+  end
+end
+```
+
+### Explaination:
+1. `Waypoint_1_from_p`: tool position or pose (x, y, x, Rx, Ry, Rz) of waypoint_1
+2. `Waypoint_1_to_p`: tool position (x, y, x, Rx, Ry, Rz) of waypoint_2
+3. `movej()`: command move robot to position in joint-space, given tool acceleration(a) and tool speed(v)
+4. `pose_add()`: pose addition
+5. `get_target_tcp_pose()`: get the current target tool pose 
+6. `pose_sub()`: pose subtraction
+
+You can modify the necessary parameters such as joint positions, or the velocity and acceleration of the movej() function.

@@ -1,0 +1,28 @@
+Here's a function in URscript that allow you to move UR robot between 2 waypoints in joint-space given tool position and joint position, and ignore active TCP:
+
+```URscript
+def move_joint():
+  local Waypoint_1_p=p[-0.13, -0.26, 0.14, -0.001, 3.11, 0.03] 
+  local Waypoint_1_q=[-1.6, -1.72, -2.2, -0.8, 1.59, -0.03] # radian
+
+  local Waypoint_2_p=p[-0.008, -0.26, 0.28, -0.27, -2.71, 0.217] 
+  local Waypoint_2_q=[-0.92, -1.26, -1.88, -1.73, 1.16, 0.88] # radian
+
+  while (True):
+    movej(get_inverse_kin(pose_trans(Waypoint_1_p, get_tcp_offset()), qnear=Waypoint_1_q), a=1.39, v=1.04)
+    movej(get_inverse_kin(pose_trans(Waypoint_2_p, get_tcp_offset()), qnear=Waypoint_2_q), a=0.78, v=0.87)
+  end
+end
+```
+
+### Explaination:
+1. `Waypoint_1_p`: tool position or pose (x, y, x, Rx, Ry, Rz) of waypoint_1
+2. `Waypoint_1_q`: joint position (Base, Shoulder, Elbow, Wrist 1, Wrist 2, Wrist 3) of waypoint_1
+3. `Waypoint_2_p`: tool position (x, y, x, Rx, Ry, Rz) of waypoint_2
+4. `Waypoint_2_q`: joint position (Base, Shoulder, Elbow, Wrist 1, Wrist 2, Wrist 3) of waypoint_2
+5. `movej()`: command move robot to position in joint-space, given joint acceleration(a) and joint speed(v)
+6. `get_inverse_kin()`: calculate the inverse kinematic transformation (tool space -> joint space), qnear is list of joint positions (Optional)
+7. `pose_trans()`: pose transformation with 2 arguments are starting pose and pose change relative to starting pose 
+8. `get_tcp_offset()`: get the active tcp offset
+
+You can modify the necessary parameters such as joint positions, tool positions, or the velocity and acceleration of the movej() function.

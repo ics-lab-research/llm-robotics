@@ -1,0 +1,43 @@
+# movel: 
+# Set tcp: Use active tcp
+# Tool speed : 250mm/s 
+# Tool acceleration : 1200mm/s2 
+# waypoint1: relative position
+# stop at this point
+# use shared parameters
+
+def unnamed():
+  global _hidden_verificationVariable=0
+  set_safety_mode_transition_hardness(1)
+  set_gravity([0.0, 0.0, 9.82])
+  set_target_payload(1.000000, [0.000000, 0.000000, 0.000000], [0.001539, 0.001539, 0.001539, 0.000000, 0.000000, 0.000000])
+  set_tcp(p[0.0,0.0,0.0,0.0,0.0,0.0])
+  set_standard_analog_input_domain(0, 1)
+  set_standard_analog_input_domain(1, 1)
+  set_tool_analog_input_domain(0, 1)
+  set_tool_analog_input_domain(1, 1)
+  set_analog_outputdomain(0, 0)
+  set_analog_outputdomain(1, 0)
+  set_input_actions_to_default()
+  set_tool_communication(False, 115200, 0, 1, 1.5, 3.5)
+  set_tool_output_mode(0)
+  set_tool_digital_output_mode(0, 1)
+  set_tool_digital_output_mode(1, 1)
+  set_tool_voltage(0)
+  step_count_31a1baac_9259_41ae_be3a_8e460796e033 = 0.0
+  thread Step_Counter_Thread_04bcb5a2_3784_42e7_a1fa_b66500996017():
+    while (True):
+      step_count_31a1baac_9259_41ae_be3a_8e460796e033 = step_count_31a1baac_9259_41ae_be3a_8e460796e033 + 1.0
+      sync()
+    end
+  end
+  run Step_Counter_Thread_04bcb5a2_3784_42e7_a1fa_b66500996017()
+  global Waypoint_1_from_p=p[-.062019204219, -.214338488214, .200613594562, .184118129545, 3.080984690227, -.306416129559]
+  global Waypoint_1_to_p=p[-.011376870936, -.169496154863, .284855927824, .177372535330, 3.032241972664, -.574868477800]
+  while (True):
+    $ 1 "Robot Program"
+    $ 2 "MoveL"
+    $ 3 "Waypoint_1" "breakAfter"
+    movel(pose_add(get_target_tcp_pose(), pose_sub(Waypoint_1_to_p, Waypoint_1_from_p)), a=1.2, v=0.25)
+  end
+end

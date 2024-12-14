@@ -1,0 +1,51 @@
+# loop 5 times
+# movej waypoint 1 -> waypoint 2
+# halt
+
+def unnamed():
+  global _hidden_verificationVariable=0
+  step_count_c2ef86b0_2d39_4edc_9ee2_d099a9e2ee7f = 0.0
+  thread Step_Counter_Thread_463eda27_3e90_432b_a9bd_81f2a2cc8606():
+    while (True):
+      step_count_c2ef86b0_2d39_4edc_9ee2_d099a9e2ee7f = step_count_c2ef86b0_2d39_4edc_9ee2_d099a9e2ee7f + 1.0
+      sync()
+    end
+  end
+  run Step_Counter_Thread_463eda27_3e90_432b_a9bd_81f2a2cc8606()
+  set_gravity([0.0, 0.0, 9.82])
+  set_tcp(p[0.0,0.0,0.0,0.0,0.0,0.0])
+  set_safety_mode_transition_hardness(1)
+  set_standard_analog_input_domain(0, 1)
+  set_standard_analog_input_domain(1, 1)
+  set_tool_analog_input_domain(0, 1)
+  set_tool_analog_input_domain(1, 1)
+  set_analog_outputdomain(0, 0)
+  set_analog_outputdomain(1, 0)
+  set_input_actions_to_default()
+  set_target_payload(1.000000, [0.000000, 0.000000, 0.000000], [0.001539, 0.001539, 0.001539, 0.000000, 0.000000, 0.000000])
+  set_tool_communication(False, 115200, 0, 1, 1.5, 3.5)
+  set_tool_output_mode(0)
+  set_tool_digital_output_mode(0, 1)
+  set_tool_digital_output_mode(1, 1)
+  set_tool_voltage(0)
+  global i_var_1=10
+  global Waypoint_1_p=p[-.136993686691, -.271598665042, .167803402252, -.001221359682, 3.116276528482, .038891915637]
+  global Waypoint_1_q=[-1.6006999999829077, -1.674595505175347, -2.1349341091264673, -0.9285703856978449, 1.5951000000004012, -0.030999999983171378]
+  global Waypoint_2_p=p[-.136993686691, -.271598665032, .229645735588, -.001221359682, 3.116276528482, .038891915637]
+  global Waypoint_2_q=[-1.6006999999372624, -1.536799077971363, -1.9461746270865818, -1.2551262949406095, 1.595100000001576, -0.03099999993752789]
+  while (True):
+    $ 1 "Robot Program"
+    $ 2 "Loop 5 times"
+    Loop_1 = 0
+    while (Loop_1 < 5):
+      $ 3 "MoveJ"
+      $ 4 "Waypoint_1" "breakAfter"
+      movej(get_inverse_kin(Waypoint_1_p, qnear=Waypoint_1_q), a=1.3962634015954636, v=1.0471975511965976)
+      $ 5 "Waypoint_2" "breakAfter"
+      movej(get_inverse_kin(Waypoint_2_p, qnear=Waypoint_2_q), a=1.3962634015954636, v=1.0471975511965976)
+      Loop_1 = Loop_1 + 1
+    end
+    $ 6 "Halt"
+    halt
+  end
+end

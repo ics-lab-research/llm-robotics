@@ -1,0 +1,50 @@
+# case 1
+# case 2
+# default case 
+
+def unnamed():
+  global _hidden_verificationVariable=0
+  step_count_c2ef86b0_2d39_4edc_9ee2_d099a9e2ee7f = 0.0
+  thread Step_Counter_Thread_463eda27_3e90_432b_a9bd_81f2a2cc8606():
+    while (True):
+      step_count_c2ef86b0_2d39_4edc_9ee2_d099a9e2ee7f = step_count_c2ef86b0_2d39_4edc_9ee2_d099a9e2ee7f + 1.0
+      sync()
+    end
+  end
+  run Step_Counter_Thread_463eda27_3e90_432b_a9bd_81f2a2cc8606()
+  set_gravity([0.0, 0.0, 9.82])
+  set_tcp(p[0.0,0.0,0.0,0.0,0.0,0.0])
+  set_safety_mode_transition_hardness(1)
+  set_standard_analog_input_domain(0, 1)
+  set_standard_analog_input_domain(1, 1)
+  set_tool_analog_input_domain(0, 1)
+  set_tool_analog_input_domain(1, 1)
+  set_analog_outputdomain(0, 0)
+  set_analog_outputdomain(1, 0)
+  set_input_actions_to_default()
+  set_target_payload(1.000000, [0.000000, 0.000000, 0.000000], [0.001539, 0.001539, 0.001539, 0.000000, 0.000000, 0.000000])
+  set_tool_communication(False, 115200, 0, 1, 1.5, 3.5)
+  set_tool_output_mode(0)
+  set_tool_digital_output_mode(0, 1)
+  set_tool_digital_output_mode(1, 1)
+  set_tool_voltage(0)
+  global i_var_1=10
+  while (True):
+    $ 1 "Robot Program"
+    $ 2 "Switch digital_in[0]≟1"
+    switch_1 = get_standard_digital_in(0) == 1
+    $ 3 "Case 1"
+    if (1 == switch_1):
+      $ 4 "var_1≔10"
+      global var_1=10
+    elif (2 == switch_1):
+      $ 5 "Case 2"
+      $ 6 "var_1≔20"
+      global var_1=20
+    else:
+      $ 7 "Default Case"
+      $ 8 "var_1≔0"
+      global var_1=0
+    end
+  end
+end

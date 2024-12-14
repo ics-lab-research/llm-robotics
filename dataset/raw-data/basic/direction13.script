@@ -1,0 +1,69 @@
+# movep: 
+# Set tcp: Use active tcp
+# Tool speed : 250/s 
+# Tool acceleration : 1200/s 
+# blend with radius 25mm
+# derection: base x+
+
+def unnamed():
+  global _hidden_verificationVariable=0
+  step_count_c2ef86b0_2d39_4edc_9ee2_d099a9e2ee7f = 0.0
+  thread Step_Counter_Thread_463eda27_3e90_432b_a9bd_81f2a2cc8606():
+    while (True):
+      step_count_c2ef86b0_2d39_4edc_9ee2_d099a9e2ee7f = step_count_c2ef86b0_2d39_4edc_9ee2_d099a9e2ee7f + 1.0
+      sync()
+    end
+  end
+  run Step_Counter_Thread_463eda27_3e90_432b_a9bd_81f2a2cc8606()
+  set_gravity([0.0, 0.0, 9.82])
+  set_tcp(p[0.0,0.0,0.0,0.0,0.0,0.0])
+  set_safety_mode_transition_hardness(1)
+  set_standard_analog_input_domain(0, 1)
+  set_standard_analog_input_domain(1, 1)
+  set_tool_analog_input_domain(0, 1)
+  set_tool_analog_input_domain(1, 1)
+  set_analog_outputdomain(0, 0)
+  set_analog_outputdomain(1, 0)
+  set_input_actions_to_default()
+  set_target_payload(1.000000, [0.000000, 0.000000, 0.000000], [0.001539, 0.001539, 0.001539, 0.000000, 0.000000, 0.000000])
+  set_tool_communication(False, 115200, 0, 1, 1.5, 3.5)
+  set_tool_output_mode(0)
+  set_tool_digital_output_mode(0, 1)
+  set_tool_digital_output_mode(1, 1)
+  set_tool_voltage(0)
+  def calculate_point_to_move_towards(feature, direction, position_distance):
+    local posDir=[direction[0], direction[1], direction[2]]
+    if (norm(posDir) < 1e-6):
+      return get_target_waypoint()
+    end
+    local direction_vector_normalized=normalize(posDir)
+    local displacement_pose=p[direction_vector_normalized[0] * position_distance,direction_vector_normalized[1] * position_distance,direction_vector_normalized[2] * position_distance,0,0,0]
+    local wanted_displacement_in_base_frame=pose_sub(pose_trans(feature, displacement_pose), feature)
+    return pose_add(get_target_waypoint(), wanted_displacement_in_base_frame)
+  end
+  while (True):
+    $ 1 "Robot Program"
+    $ 2 "MoveP"
+    $ 3 "Direction: Base X+"
+    global move_thread_flag_3=0
+    thread move_thread_3():
+      enter_critical
+      move_thread_flag_3 = 1
+      local towardsPos=calculate_point_to_move_towards(p[0.0,0.0,0.0,0.0,0.0,0.0], [1.0,0.0,0.0], 1000.0)
+      movep(towardsPos, a=1.2, v=0.25)
+      move_thread_flag_3 = 2
+      exit_critical
+    end
+    move_thread_flag_3 = 0
+    move_thread_han_3 = run move_thread_3()
+    while (True):
+      if (get_standard_digital_in(0) == 1):
+        kill move_thread_han_3
+        stopl(1.2)
+        $ 4 "Until (expression)"
+        break
+      end
+      sync()
+    end
+  end
+end

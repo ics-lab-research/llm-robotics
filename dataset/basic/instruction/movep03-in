@@ -1,0 +1,4 @@
+Define a URscript function can move UR robot to waypoints (move process) given tool position of waypoint_1 are [-0.13, -0.26, 0.14, -0.001, 3.11, 0.03], tool acceleration and tool speed are 1.2 m/s^2 and 0.78 m/s with waypoint_1, 0.78 m/s^2n, we use active TCP and blend radius of waypoint 1 is 0.025m, and then add circle move with fixed mode between viapoint_1 and endpoint_1, with given tool position are [-0.08, -0.23, 0.14, -0.001, 3.11, 0.03] and [-0.03, -0.2, 0.17, 0.07, 3.11, 0.03], blend radius is 0.025m
+
+
+Define a URscript function can move UR robot to waypoints (move process) given tool position, and use active TCP, and then add circle move in fixed mode 

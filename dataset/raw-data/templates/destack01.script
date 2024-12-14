@@ -1,0 +1,95 @@
+# destack 
+# the next position is found when: di[0]=1
+# item thickness: 5mm
+# tool speed: 250mm/s
+# tool acceleration: 1200mm/s2
+# start_pos1
+# direction: stop when 200mm, frompos_1 -> topos_1
+# placesequence: 
+# stackpos_1
+# set do[0]=off
+# wait 5.0
+# exit_1
+
+def destack01():
+  global _hidden_verificationVariable=0
+  step_count_f5b51f0c_4365_410e_844e_85abb40d34c3 = 0.0
+  thread Step_Counter_Thread_6336083a_980d_4b96_bd1e_426122f1dec4():
+    while (True):
+      step_count_f5b51f0c_4365_410e_844e_85abb40d34c3 = step_count_f5b51f0c_4365_410e_844e_85abb40d34c3 + 1.0
+      sync()
+    end
+  end
+  run Step_Counter_Thread_6336083a_980d_4b96_bd1e_426122f1dec4()
+  set_gravity([0.0, 0.0, 9.82])
+  set_safety_mode_transition_hardness(1)
+  set_target_payload(1.000000, [0.000000, 0.000000, 0.000000], [0.001539, 0.001539, 0.001539, 0.000000, 0.000000, 0.000000])
+  set_tcp(p[0.0,0.0,0.0,0.0,0.0,0.0])
+  set_tool_communication(False, 115200, 0, 1, 1.5, 3.5)
+  set_tool_output_mode(0)
+  set_tool_digital_output_mode(0, 1)
+  set_tool_digital_output_mode(1, 1)
+  set_tool_voltage(0)
+  set_standard_analog_input_domain(0, 1)
+  set_standard_analog_input_domain(1, 1)
+  set_tool_analog_input_domain(0, 1)
+  set_tool_analog_input_domain(1, 1)
+  set_analog_outputdomain(0, 0)
+  set_analog_outputdomain(1, 0)
+  set_input_actions_to_default()
+  global i_var_1=10
+  global interpolate_1=0.0
+  global StartPos_1_p=p[.149542971546, -.351463528705, .152228927617, -.371542170508, 3.097153373374, .043298329499]
+  global StartPos_1_q=[-0.8270135012035986, -2.012606293034601, -1.766606824914609, -0.9428779051382934, 1.6048184026876031, 0.504833908349454]
+  global FromPos_1_p=p[.149542971541, -.351463528699, .203471260953, -.371542170508, 3.097153373374, .043298329499]
+  global FromPos_1_q=[-0.827013501174469, -1.9060884472079485, -1.648126959163272, -1.1678756167152962, 1.6048184026878851, 0.5048339083786006]
+  global ToPos_1_p=p[.233984917154, -.298943670729, .203471260952, -.371542170508, 3.097153373370, .043298329506]
+  global ToPos_1_q=[-0.5633569741912368, -1.895041913707157, -1.6676728594917707, -1.1501708581709202, 1.606170730022221, 0.7686467091110545]
+  global StackPos_1_p=p[.233984917146, -.298943670724, .262313594286, -.371542170508, 3.097153373370, .043298329506]
+  global StackPos_1_q=[-0.563356974157478, -1.8262905337276285, -1.471165316176565, -1.4154297814644625, 1.6061707300222379, 0.7686467091448341]
+  global Exit_1_p=p[.233984917129, -.298943670713, .362313594283, -.371542170508, 3.097153373370, .043298329506]
+  global Exit_1_q=[-0.5633569741001017, -1.864882959785497, -0.9448814208468024, -1.9031212507343227, 1.6061707300222663, 0.7686467092022431]
+  while (True):
+    $ 1 "Robot Program"
+    $ 2 "Destack"
+    if (interpolate_1 == 0.0):
+      $ 3 "StartPos_1" "breakAfter"
+      movel(StartPos_1_p, a=1.2, v=0.25)
+      global ur_start_point_2=get_forward_kin()
+    else:
+      movel(p[ur_start_point_2[0]+interpolate_1*0.8491549099544011, ur_start_point_2[1]+interpolate_1*0.5281438619356785, ur_start_point_2[2]+interpolate_1*-9.908206552339598E-12, ur_start_point_2[3],ur_start_point_2[4],ur_start_point_2[5]], a=1.2, v=0.25)
+    end
+    thread ur_Thread_direction_2():
+      speedl([0.008491549099544011,0.005281438619356786,-9.908206552339598E-14,0.0,0.0,0.0],1.2,100000.0)
+      ur_stacking_motion_running_2 = False
+    end
+    ur_thread_handler_2 = run ur_Thread_direction_2()
+    ur_stacking_motion_running_2 = True
+    while (ur_stacking_motion_running_2 == True):
+      if ((pose_dist(get_forward_kin(),ur_start_point_2)>0.09944233333998834)):
+        kill ur_thread_handler_2
+        ur_stacking_motion_running_2 = False
+        interpolate_1 = 0.0
+        stopl(1.2)
+      else:
+        if (get_standard_digital_in(0) == 1):
+          kill ur_thread_handler_2
+          ur_stacking_motion_running_2 = False
+          interpolate_1 = pose_dist(get_forward_kin(),ur_start_point_2) +0.005
+          stopl(1.2)
+          pose_1 = get_forward_kin()
+          $ 8 "StackPos_1" "breakAfter"
+          movel(pose_1, a=1.2, v=0.25)
+          $ 9 "Set DO[0]=Off"
+          set_standard_digital_out(0, False)
+          $ 10 "Wait: 5.0"
+          sleep(5.0)
+          $ 11 "Exit_1" "breakAfter"
+          movel(pose_trans(pose_1, pose_trans(pose_inv(StackPos_1_p),Exit_1_p)), a=1.2, v=0.25)
+        end
+      end
+      sync()
+    end
+  end
+end
+

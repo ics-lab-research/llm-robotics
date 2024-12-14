@@ -1,0 +1,5 @@
+Define a URscript function can move UR robot to waypoints in joint-space given tool position and joint position of waypoint_1 are [-0.13, -0.26, 0.14, -0.001, 3.11, 0.03] and [-1.6, -1.72, -2.2, -0.8, 1.59, -0.03], joint acceleration and joint speed are 1.39 radian/s^2 and 1.04 radian/s^2 with waypoint_1, we use active TCP, until digial_in[0] = 1 then stop with joint acceleration is 1.39 radian/s^2
+
+
+Define a URscript function can move UR robot to waypoints in joint-space given tool and joint position, and use active TCP, until digial_in[0] = 1
+

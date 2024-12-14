@@ -1,0 +1,30 @@
+# Task 3: Pick and Place Operation
+def pick_and_place():
+	local pick_position = [0.2, -1.2, 1.0, 0.0, 1.57, 0.0]  # Position above the object
+	local place_position = [0.5, -1.2, 1.0, 0.0, 1.57, 0.0]  # Position above the target
+
+	while (True):
+		movej(pick_position, a=1.2, v=0.25)
+		sleep(0.5)
+
+		# Simulate closing the gripper (assuming Digital Output 0 controls gripper)
+		set_digital_out(0, True)
+		sleep(0.5)  # Pause for grip to engage
+
+		# Lift the object
+		movej([0.2, -1.0, 1.0, 0.0, 1.57, 0.0], a=1.2, v=0.25)  # Move up slightly
+
+		# Move to place position
+		movej(place_position, a=1.2, v=0.25)
+		sleep(0.5)
+
+		# Release the object
+		set_digital_out(0, False)
+		sleep(0.5)  # Pause for release
+
+		# Return to initial position
+		movej([0, -1.57, 1.57, 0.0, 1.57, 0.0], a=1.2, v=0.25)
+	end
+end
+
+pick_and_place()

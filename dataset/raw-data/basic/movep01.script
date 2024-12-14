@@ -1,0 +1,44 @@
+# movep: 
+# Set tcp: Use active tcp
+# Tool speed : 250mm/s 
+# Tool acceleration : 1200mm/s2 
+# Blend with radius: 25mm
+# waypoint1: feature view, xyz-RxRyRz (radian), Joint positions (degree) 
+# Use shared blend radius
+# use shared parameters
+
+def unnamed():
+  global _hidden_verificationVariable=0
+  set_safety_mode_transition_hardness(1)
+  set_gravity([0.0, 0.0, 9.82])
+  set_target_payload(1.000000, [0.000000, 0.000000, 0.000000], [0.001539, 0.001539, 0.001539, 0.000000, 0.000000, 0.000000])
+  set_tcp(p[0.0,0.0,0.0,0.0,0.0,0.0])
+  set_standard_analog_input_domain(0, 1)
+  set_standard_analog_input_domain(1, 1)
+  set_tool_analog_input_domain(0, 1)
+  set_tool_analog_input_domain(1, 1)
+  set_analog_outputdomain(0, 0)
+  set_analog_outputdomain(1, 0)
+  set_input_actions_to_default()
+  set_tool_communication(False, 115200, 0, 1, 1.5, 3.5)
+  set_tool_output_mode(0)
+  set_tool_digital_output_mode(0, 1)
+  set_tool_digital_output_mode(1, 1)
+  set_tool_voltage(0)
+  step_count_31a1baac_9259_41ae_be3a_8e460796e033 = 0.0
+  thread Step_Counter_Thread_04bcb5a2_3784_42e7_a1fa_b66500996017():
+    while (True):
+      step_count_31a1baac_9259_41ae_be3a_8e460796e033 = step_count_31a1baac_9259_41ae_be3a_8e460796e033 + 1.0
+      sync()
+    end
+  end
+  run Step_Counter_Thread_04bcb5a2_3784_42e7_a1fa_b66500996017()
+  global Waypoint_1_p=p[-.011376870936, -.169496154863, .284855927824, .177372535330, 3.032241972664, -.574868477800]
+  global Waypoint_1_q=[-0.38267504010866915, -0.3772853020816882, -2.199317875999988, -1.962075413255329, 1.2340153173059543, 1.2753759901961512]
+  while (True):
+    $ 1 "Robot Program"
+    $ 2 "MoveP"
+    $ 3 "Waypoint_1" "breakAfter"
+    movep(Waypoint_1_p, a=1.2, v=0.25, r=0.025)
+  end
+end

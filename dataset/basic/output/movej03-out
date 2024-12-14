@@ -1,0 +1,21 @@
+Here's a function in URscript that allow you to move UR robot between 2 waypoints in joint-space given joint position, using joint angles:
+
+```URscript
+def move_joint():
+  local Waypoint_1_q=[-1.6, -1.72, -2.2, -0.8, 1.59, -0.03] # radian
+
+  local Waypoint_2_q=[-0.92, -1.26, -1.88, -1.73, 1.16, 0.88] # radian
+
+  while (True):
+	movej(Waypoint_1_q, a=1.39, v=1.04)
+	movej(Waypoint_2_q, a=0.78, v=0.87)
+  end
+end
+```
+
+### Explaination:
+1. `Waypoint_1_q`: joint position (Base, Shoulder, Elbow, Wrist 1, Wrist 2) of waypoint_1
+2. `Waypoint_2_q`: joint position (Base, Shoulder, Elbow, Wrist 1, Wrist 2) of waypoint_2
+3. `movej()`: command move robot to position in joint-space, given joint acceleration(a) and joint speed(v)
+
+Note that no joint position vector is provided so the current joint angles of the robot arm will be used. You can modify the necessary parameters such as joint positions, or the velocity and acceleration of the movej() function. 

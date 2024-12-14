@@ -1,0 +1,50 @@
+# wait 0.01
+# wait di[0]=lo
+# wait ai[0]>4
+# wait expression di[0]=1
+
+
+def unnamed():
+  global _hidden_verificationVariable=0
+  step_count_c2ef86b0_2d39_4edc_9ee2_d099a9e2ee7f = 0.0
+  thread Step_Counter_Thread_463eda27_3e90_432b_a9bd_81f2a2cc8606():
+    while (True):
+      step_count_c2ef86b0_2d39_4edc_9ee2_d099a9e2ee7f = step_count_c2ef86b0_2d39_4edc_9ee2_d099a9e2ee7f + 1.0
+      sync()
+    end
+  end
+  run Step_Counter_Thread_463eda27_3e90_432b_a9bd_81f2a2cc8606()
+  set_gravity([0.0, 0.0, 9.82])
+  set_tcp(p[0.0,0.0,0.0,0.0,0.0,0.0])
+  set_safety_mode_transition_hardness(1)
+  set_standard_analog_input_domain(0, 1)
+  set_standard_analog_input_domain(1, 1)
+  set_tool_analog_input_domain(0, 1)
+  set_tool_analog_input_domain(1, 1)
+  set_analog_outputdomain(0, 0)
+  set_analog_outputdomain(1, 0)
+  set_input_actions_to_default()
+  set_target_payload(1.000000, [0.000000, 0.000000, 0.000000], [0.001539, 0.001539, 0.001539, 0.000000, 0.000000, 0.000000])
+  set_tool_communication(False, 115200, 0, 1, 1.5, 3.5)
+  set_tool_output_mode(0)
+  set_tool_digital_output_mode(0, 1)
+  set_tool_digital_output_mode(1, 1)
+  set_tool_voltage(0)
+  while (True):
+    $ 1 "Robot Program"
+    $ 2 "Wait: 0.01"
+    sleep(0.01)
+    $ 3 "Wait DI[0]=LO"
+    while (get_standard_digital_in(0) == True):
+      sync()
+    end
+    $ 4 "Wait AI[0]>4.0"
+    while (get_standard_analog_in(0) < 4.0):
+      sync()
+    end
+    $ 5 "Wait digital_in[0]≟1"
+    while (not(get_standard_digital_in(0) == 1)):
+      sync()
+    end
+  end
+end

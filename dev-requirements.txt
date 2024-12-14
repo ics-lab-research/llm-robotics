@@ -1,0 +1,5 @@
+python-lsp-server[all]
+black
+jupyterlab
+catppuccin-jupyterlab
+jupyterlab-vim

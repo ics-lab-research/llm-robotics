@@ -1,0 +1,4 @@
+Define a URscript function can move UR robot using relative point linear in tool-space, from position [-0.13, -0.26, 0.14, -0.001, 3.11, 0.03] to [-0.008, -0.26, 0.28, -0.27, -2.71, 0.217], tool acceleration and tool speed are 1.2 m/s^2 and 0.78 m/s
+
+
+Define a URscript function can move UR robot using relative points linear in tool-space

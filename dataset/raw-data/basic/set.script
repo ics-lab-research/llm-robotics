@@ -1,0 +1,52 @@
+# set do[0]=off
+# set ao[0]=4.0
+# set do[0]=1
+# set do[0]=hi:pulse 0.5
+# set i_var_1=i_var1+1
+
+def unnamed():
+  global _hidden_verificationVariable=0
+  step_count_c2ef86b0_2d39_4edc_9ee2_d099a9e2ee7f = 0.0
+  thread Step_Counter_Thread_463eda27_3e90_432b_a9bd_81f2a2cc8606():
+    while (True):
+      step_count_c2ef86b0_2d39_4edc_9ee2_d099a9e2ee7f = step_count_c2ef86b0_2d39_4edc_9ee2_d099a9e2ee7f + 1.0
+      sync()
+    end
+  end
+  run Step_Counter_Thread_463eda27_3e90_432b_a9bd_81f2a2cc8606()
+  set_gravity([0.0, 0.0, 9.82])
+  set_tcp(p[0.0,0.0,0.0,0.0,0.0,0.0])
+  set_safety_mode_transition_hardness(1)
+  set_standard_analog_input_domain(0, 1)
+  set_standard_analog_input_domain(1, 1)
+  set_tool_analog_input_domain(0, 1)
+  set_tool_analog_input_domain(1, 1)
+  set_analog_outputdomain(0, 0)
+  set_analog_outputdomain(1, 0)
+  set_input_actions_to_default()
+  set_target_payload(1.000000, [0.000000, 0.000000, 0.000000], [0.001539, 0.001539, 0.001539, 0.000000, 0.000000, 0.000000])
+  set_tool_communication(False, 115200, 0, 1, 1.5, 3.5)
+  set_tool_output_mode(0)
+  set_tool_digital_output_mode(0, 1)
+  set_tool_digital_output_mode(1, 1)
+  set_tool_voltage(0)
+  global i_var_1=10
+  while (True):
+    $ 1 "Robot Program"
+    $ 2 "Set DO[0]=Off"
+    set_standard_digital_out(0, False)
+    $ 3 "Set AO[0]=4.0"
+    set_standard_analog_out(0, 0.0)
+    $ 4 "Set DO[0]=1"
+    set_standard_digital_out(0, 1)
+    $ 5 "Set DO[0]=HI:Pulse 0.5"
+    thread SinglePulse0():
+      set_standard_digital_out(0, True)
+      sleep(0.5)
+      set_standard_digital_out(0, False)
+    end
+    singlePulse0 = run SinglePulse0()
+    $ 6 "Set i_var_1=i_var_1+1"
+    i_var_1 = i_var_1 + 1
+  end
+end
