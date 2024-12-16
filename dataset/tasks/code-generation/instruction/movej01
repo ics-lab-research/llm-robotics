@@ -1,0 +1,1 @@
+Define a function in URscript that continuously alternates the robot's movement between two predefined positions, using specified joint angles, accelerations, and speeds, while accounting for the active TCP. The positions are defined in Cartesian space and transformed into joint configurations for execution.

@@ -1,0 +1,1 @@
+Define a function in URscript that moves the robot to a specified joint position repeatedly, using a separate thread for movement. The movement can be interrupted by a digital input, and the script ensures safe execution by managing thread synchronization and critical section access.

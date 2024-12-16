@@ -1,0 +1,1 @@
+Define a function in URscript that continuously moves the robot between two predefined joint positions with specific acceleration, velocity, and time settings for each movement. The positions are defined in 3D space with corresponding joint angles, and the robot moves between them in a loop.

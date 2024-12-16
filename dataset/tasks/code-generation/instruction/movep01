@@ -1,0 +1,1 @@
+Define a function in URscript that continuously moves the robot between two predefined positions in Cartesian space with specified speeds, accelerations, and blending radius. The robot transitions smoothly between the positions, adjusting its trajectory according to the given parameters for each movement.

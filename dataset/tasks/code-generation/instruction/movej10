@@ -1,0 +1,1 @@
+Define a function in URscript that repeatedly initiates a threaded motion to a specified joint position while monitoring a digital input signal. If the signal is low, the script will stop the motion, terminate the thread, and break the loop. The function ensures thread safety using critical sections and manages synchronization between the motion and input monitoring.

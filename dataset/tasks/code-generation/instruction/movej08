@@ -1,0 +1,1 @@
+Define a URscript function that repeatedly moves the robot to a specified waypoint in joint space while monitoring for tool contact. If contact is detected, the robot retracts slightly from the contact point and then continues its movement, using multithreading to handle the motion and collision detection concurrently.

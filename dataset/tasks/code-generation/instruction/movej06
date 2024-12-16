@@ -1,0 +1,1 @@
+Define a function in URscript that repeatedly moves the robot to a position relative to its current TCP, based on a predefined offset. The movement is continuous, using specified acceleration and velocity values.

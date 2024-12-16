@@ -1,0 +1,10 @@
+```URscript
+def move_to_target_and_popup():
+  local target_pose = p[0.6, -0.2, 0.5, 0, 0, 0]
+
+  movel(target_pose, a=0.2, v=0.5)
+
+  # TODO: Display a message on URSim when moving done
+  popup("Message", title="Message", blocking=True)
+end
+```

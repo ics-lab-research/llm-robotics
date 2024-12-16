@@ -1,0 +1,1 @@
+Define a function in URscript to repeatedly move the robot in a straight line between two predefined positions. The motion between each position is performed with specific accelerations, velocities, and blending radius, ensuring smooth transitions in the robot's path.

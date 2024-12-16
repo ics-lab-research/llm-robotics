@@ -1,0 +1,1 @@
+Define a function in URscript that continuously moves the robot between two predefined positions in a straight line, with specified acceleration, velocity, and time for each move. The script uses transformations based on the robot's current TCP position to ensure accurate motion.

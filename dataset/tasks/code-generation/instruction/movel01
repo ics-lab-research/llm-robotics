@@ -1,0 +1,1 @@
+Define a function in URscript that continuously moves the robot in a straight line between two predefined positions in space. The movement occurs with specified acceleration and velocity values, ensuring smooth transitions between the two waypoints.

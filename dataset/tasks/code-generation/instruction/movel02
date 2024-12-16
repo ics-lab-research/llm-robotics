@@ -1,0 +1,1 @@
+Define a function in URscript that moves the robot arm back and forth between two predefined linear positions in the workspace. The movement should be executed continuously, with each move adjusted for the current TCP offset, using specified acceleration and speed parameters for each waypoint.

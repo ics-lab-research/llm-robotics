@@ -1,0 +1,49 @@
+```URscript
+def move_joint():
+  local Waypoint_1_p=p[-0.13, -0.26, 0.14, -0.001, 3.11, 0.03]
+  local Waypoint_1_q=[-1.6, -1.72, -2.2, -0.8, 1.59, -0.03]
+
+  while (True):
+    global move_thread_flag_3=0
+    thread move_thread_3():
+      enter_critical
+      move_thread_flag_3 = 1
+      movej(get_inverse_kin(Waypoint_1_p, qnear=Waypoint_1_q), a=1.39, v=1.04)
+      move_thread_flag_3 = 2
+      exit_critical
+    end
+
+    move_thread_flag_3 = 0
+    move_thread_han_3 = run move_thread_3()
+
+    while (True):
+      local targetTcpDirection=get_target_tcp_speed()
+      local stepsToRetract=tool_contact(direction=targetTcpDirection)
+      if (stepsToRetract > 0):
+        kill move_thread_han_3
+        stopj(34.9)
+        local backTrackMovement=get_actual_joint_positions_history(stepsToRetract)
+        local contactPose=get_forward_kin(backTrackMovement)
+        local posDir=[targetTcpDirection[0],targetTcpDirection[1],targetTcpDirection[2]]
+        local retractTo=contactPose
+        if (norm(posDir) > 1e-6):
+          local normalizedPosDir=normalize(posDir)
+
+          # distance is 0.001
+          local additionalRetraction=p[normalizedPosDir[0] * 0.001, normalizedPosDir[1] * 0.001, normalizedPosDir[2] * 0.001, 0, 0, 0] 
+
+          retractTo = pose_sub(contactPose, additionalRetraction)
+        end
+        movej(retractTo, a=34.9, v=0.1)
+        break
+      end
+      sleep(1.0E-10)
+      if (move_thread_flag_3 > 1):
+        join move_thread_han_3
+        break
+      end
+      sync()
+    end
+  end
+end
+```

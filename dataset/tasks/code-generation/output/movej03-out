@@ -1,0 +1,12 @@
+```URscript
+def move_joint():
+  local Waypoint_1_q=[-1.6, -1.72, -2.2, -0.8, 1.59, -0.03] # radian
+
+  local Waypoint_2_q=[-0.92, -1.26, -1.88, -1.73, 1.16, 0.88] # radian
+
+  while (True):
+	movej(Waypoint_1_q, a=1.39, v=1.04)
+	movej(Waypoint_2_q, a=0.78, v=0.87)
+  end
+end
+```

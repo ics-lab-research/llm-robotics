@@ -1,0 +1,1 @@
+Define a function in URscript that moves the robot arm back and forth between two positions in Cartesian space using linear interpolation. The robot's end effector is set to a manual TCP before each movement, with specified accelerations and velocities for the transitions between the waypoints.

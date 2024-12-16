@@ -1,0 +1,1 @@
+Define a function in URscript that continuously moves the robot to a predefined position in joint space, using a specific acceleration and speed. The movement occurs in a separate thread, and the function monitors a sensor input to stop the motion when a threshold is exceeded, safely terminating the thread and halting the robot.

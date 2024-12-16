@@ -1,0 +1,1 @@
+Define a function in URScript that continuously moves the robot back and forth between two predefined 6D waypoints, adjusting for the TCP offset, using smooth linear motion with specified acceleration, velocity, and blending radius for each transition.

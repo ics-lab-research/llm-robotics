@@ -1,0 +1,1 @@
+Define a function in URscript that repeatedly moves the robot to a predefined joint position while managing concurrent thread execution. The code creates a new thread to handle the motion, ensuring safe operation by using critical sections to synchronize access to shared variables, and waits for the movement to complete before continuing the loop.

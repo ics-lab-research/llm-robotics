@@ -1,0 +1,1 @@
+Define a function in URscript to repeatedly move the robot along a predefined motion sequence, starting at a waypoint, transitioning through a via point, and ending at a final position, using a combination of linear and circular movements with specified acceleration, velocity, and blending radius.

@@ -1,0 +1,1 @@
+Define a function in URscript that repeatedly moves the robot along a linear path between two predefined positions, adjusting the TCP pose based on the difference between the two waypoints. The movement occurs with specified acceleration and velocity values, continuously repeating the motion.

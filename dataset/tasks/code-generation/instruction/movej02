@@ -1,0 +1,1 @@
+Define a function in URscript that moves the robot continuously between two predefined waypoints in 3D space. Each waypoint is specified with a target position, orientation, and a preferred joint configuration. The motion accounts for the TCP offset and uses specified acceleration and velocity values for smooth transitions.

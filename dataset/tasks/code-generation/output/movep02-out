@@ -1,0 +1,11 @@
+```URscript
+def move_process():
+  local Waypoint_1_p=p[-0.13, -0.26, 0.14, -0.001, 3.11, 0.03] 
+  local Waypoint_2_p=p[-0.008, -0.26, 0.28, -0.27, -2.71, 0.217] 
+
+  while (True):
+    movep(pose_trans(Waypoint_1_p, get_tcp_offset()), a=1.2, v=0.25, r=0.025)
+    movep(pose_trans(Waypoint_2_p, get_tcp_offset()), a=0.78, v=0.87, r=0.02)
+  end
+end
+```

@@ -1,0 +1,1 @@
+Define a function in URscript that continuously moves the robot between two predefined joint configurations, with specified accelerations, velocities, and blending radius, while adjusting the position relative to the base frame using inverse kinematics.
