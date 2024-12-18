@@ -1,0 +1,11 @@
+```URscript
+# Updated URScript code
+def move_robot():
+    popup("Robot is starting to move.", "Movement Status", warning=False)
+    movel(p[0.5, -0.2, 0.3, 0, 3.14, 0], a=1.2, v=0.25)  # Reduced speed by half
+    sleep(2.0)
+    movel(p[0.6, -0.1, 0.2, 0, 3.14, 0], a=1.2, v=0.25)  # Reduced speed by half
+    sleep(2.0)
+    popup("Robot has stopped moving.", "Movement Status", warning=False)
+end
+```

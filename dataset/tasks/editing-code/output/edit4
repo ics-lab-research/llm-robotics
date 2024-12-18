@@ -1,0 +1,35 @@
+```URscript
+# Function to move the robot to pick and place an object
+def move_robot():
+    # Move to the home position
+    movej([0, -1.57, 0, -1.57, 0, 0], a=1.4, v=1.05)
+    
+    # Attempt to pick up the object
+    retry_count = 0
+    object_picked = False
+    while (retry_count < 3 and not object_picked):
+        set_digital_out(0, True)  # Close gripper
+        sleep(1)
+        # Add a sensor check to confirm the object is picked
+        if read_digital_in(1):  # Assuming digital input 1 indicates object presence
+            object_picked = True
+        else:
+            retry_count = retry_count + 1
+            textmsg("Retry picking up object: ", retry_count)
+    
+    if not object_picked:
+        textmsg("Failed to pick up the object after 3 attempts.")
+        return  # Exit the function if the object is not picked
+    
+    # Move to the target location
+    movej([0.3, -1.2, 0.2, -1.57, 0, 0], a=1.4, v=1.05)
+    
+    # Release the object
+    set_digital_out(0, False)  # Open gripper
+    sleep(1)
+    
+    # Return to the home position
+    movej([0, -1.57, 0, -1.57, 0, 0], a=1.4, v=1.05)
+    textmsg("Task completed successfully.")
+end
+```

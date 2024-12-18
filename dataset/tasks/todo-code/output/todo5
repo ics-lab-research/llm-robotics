@@ -1,0 +1,13 @@
+```URscript
+def example_movej_with_input_check():
+    local pos1 = p[0.2, 0.4, 0.3, 0, 3.14, 0]
+    local pos2 = p[0.4, 0.2, 0.3, 0, 3.14, 0]
+  
+    if get_digital_in(0):
+        # TODO: If input is HIGH (1), move to Position 1
+        movej(pos1, a=1.2, v=0.25)
+    else:
+        # TODO: If input is LOW (0), move to Position 2
+        movej(pos2, a=1.2, v=0.25)
+end
+```

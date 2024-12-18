@@ -73,7 +73,7 @@ def encode_prompt(prompt_instructions):
     idx = 0
 
     """Encode multiple prompt instructions into a single string."""
-    prompt = open("./prompts/prompt.txt").read() + "\n"
+    prompt = open("./prompts/prompt2.txt").read() + "\n"
 
     for idx, task_dict in enumerate(prompt_instructions):
         (instruction, input, output) = (
@@ -94,17 +94,19 @@ def encode_prompt(prompt_instructions):
     return prompt
 
 
-def seed_instruction_data_loader(seed_tasks_path: str = "./seed_tasks.jsonl"):
+def seed_instruction_data_loader(seed_tasks_path: str = "./seed_tasks.json"):
     """
     NOTE: we can change format of seed tasks
     """
-    seed_tasks = [json.loads(seed) for seed in open(seed_tasks_path, "r")]
+    # seed_tasks = [json.loads(seed) for seed in open(seed_tasks_path, "r")]
+    with open(seed_tasks_path, "r", encoding="utf-8") as file:
+        seed_tasks = json.load(file)  # Load JSON data directly
 
     seed_instruction_data = [
         {
             "instruction": t["instruction"],
-            "input": t["instances"][0]["input"],
-            "output": t["instances"][0]["output"],
+            "input": t["input"],
+            "output": t["output"],
         }
         for t in seed_tasks
     ]
@@ -133,7 +135,7 @@ def gemini_completion(
     # prompts: Union[str, Sequence[str], Sequence[dict[str, str]], dict[str, str]],
     prompts: List[str],
     decoding_args: GeminiGenerationArguments,
-    model_name="gemini-1.5-flash",  # TODO: change to pro
+    model_name="gemini-2.0-flash-exp",  # TODO: change to pro
     # sleep_time=2,
     batch_size=1,
     max_instances=sys.maxsize,

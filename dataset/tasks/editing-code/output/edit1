@@ -1,0 +1,8 @@
+```URscript
+def move_to_target():
+    local target_pose = p[0.5, -0.3, 0.4, 0, 0, 0]
+
+    # Change joint acceleration to 0.5
+    movel(init_pose, a=0.5, v=1.2)
+end
+```

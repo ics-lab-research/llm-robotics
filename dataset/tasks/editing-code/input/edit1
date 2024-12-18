@@ -1,0 +1,5 @@
+def move_to_target():
+    local target_pose = p[0.5, -0.3, 0.4, 0, 0, 0]
+
+    movej(init_pose, a=0.2, v=0.5)
+end

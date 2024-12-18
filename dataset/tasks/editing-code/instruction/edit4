@@ -1,0 +1,4 @@
+Here's a URScript program I wrote for controlling a Universal Robot arm. It picks up an object and places it at a specific location. Can you make the following improvements?
+1. Add a feature to detect if the object isn't picked up and retry three times before stopping.
+2. Add comments to explain each step of the process.
+3. Optimize the loop structure for readability.

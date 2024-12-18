@@ -1,0 +1,14 @@
+```URscript
+def move_joint():
+    local Waypoint_1_p=p[-0.13, -0.26, 0.14, -0.001, 3.11, 0.03] 
+    local Waypoint_1_q=[-1.6, -1.72, -2.2, -0.8, 1.59, -0.03] # radian
+
+    local Waypoint_2_p=p[-0.008, -0.26, 0.28, -0.27, -2.71, 0.217] 
+    local Waypoint_2_q=[-0.92, -1.26, -1.88, -1.73, 1.16, 0.88] # radian
+
+    while (True):
+    	movej(get_inverse_kin(Waypoint_1_p, qnear=Waypoint_1_q), a=1.39, v=1.04, r=0.05)
+    	movej(get_inverse_kin(Waypoint_2_p, qnear=Waypoint_2_q), a=0.78, v=0.87, r=0.06)
+    end
+end
+```

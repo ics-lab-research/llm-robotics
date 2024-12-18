@@ -1,0 +1,206 @@
+[
+    {
+        "name": "edit4",
+        "instruction": "Here's a URScript program I wrote for controlling a Universal Robot arm. It picks up an object and places it at a specific location. Can you make the following improvements?\n1. Add a feature to detect if the object isn't picked up and retry three times before stopping.\n2. Add comments to explain each step of the process.\n3. Optimize the loop structure for readability.",
+        "input": "def move_robot():\n    movej([0, -1.57, 0, -1.57, 0, 0], a=1.4, v=1.05)\n    set_digital_out(0, True)  # Close gripper\n    sleep(1)\n    movej([0.3, -1.2, 0.2, -1.57, 0, 0], a=1.4, v=1.05)\n    set_digital_out(0, False)  # Open gripper\n    sleep(1)\nend",
+        "output": "```URscript\n# Function to move the robot to pick and place an object\ndef move_robot():\n    # Move to the home position\n    movej([0, -1.57, 0, -1.57, 0, 0], a=1.4, v=1.05)\n    \n    # Attempt to pick up the object\n    retry_count = 0\n    object_picked = False\n    while (retry_count < 3 and not object_picked):\n        set_digital_out(0, True)  # Close gripper\n        sleep(1)\n        # Add a sensor check to confirm the object is picked\n        if read_digital_in(1):  # Assuming digital input 1 indicates object presence\n            object_picked = True\n        else:\n            retry_count = retry_count + 1\n            textmsg(\"Retry picking up object: \", retry_count)\n    \n    if not object_picked:\n        textmsg(\"Failed to pick up the object after 3 attempts.\")\n        return  # Exit the function if the object is not picked\n    \n    # Move to the target location\n    movej([0.3, -1.2, 0.2, -1.57, 0, 0], a=1.4, v=1.05)\n    \n    # Release the object\n    set_digital_out(0, False)  # Open gripper\n    sleep(1)\n    \n    # Return to the home position\n    movej([0, -1.57, 0, -1.57, 0, 0], a=1.4, v=1.05)\n    textmsg(\"Task completed successfully.\")\nend\n```"
+    },
+    {
+        "name": "edit1",
+        "instruction": "Set the joint acceleration to 0.5 in provided URscipt code while keeping the rest of the script unchanged",
+        "input": "def move_to_target():\n    local target_pose = p[0.5, -0.3, 0.4, 0, 0, 0]\n\n    movej(init_pose, a=0.2, v=0.5)\nend",
+        "output": "```URscript\ndef move_to_target():\n    local target_pose = p[0.5, -0.3, 0.4, 0, 0, 0]\n\n    # Change joint acceleration to 0.5\n    movel(init_pose, a=0.5, v=1.2)\nend\n```"
+    },
+    {
+        "name": "edit2",
+        "instruction": "Change the URscript code to replace the use of the movejl() function with the movej() function. Ensure that all necessary adjustments are made to maintain proper functionality and execution.",
+        "input": "def move_to_target():\n    local target_pose = p[0.3, 0.2, 0.5, 0, 3.14, 0]\n\n    movej(init_pose, a=0.3, v=1.2)\nend",
+        "output": "```URscript\ndef move_to_target():\n  local target_pose = p[0.3, 0.2, 0.5, 0, 3.14, 0]\n\n  # Change to use movel() function\n  movel(init_pose, a=0.3, v=1.2)\nend\n```"
+    },
+    {
+        "name": "edit5",
+        "instruction": "Please update the following URScript code so that the robot's speed is reduced to half during its movements. Also, add a popup message indicating when the robot starts moving and when it stops moving.",
+        "input": "def move_robot():\n    movel(p[0.5, -0.2, 0.3, 0, 3.14, 0], a=1.2, v=0.5)\n    sleep(2.0)\n    movel(p[0.6, -0.1, 0.2, 0, 3.14, 0], a=1.2, v=0.5)\n    sleep(2.0)\nend",
+        "output": "```URscript\n# Updated URScript code\ndef move_robot():\n    popup(\"Robot is starting to move.\", \"Movement Status\", warning=False)\n    movel(p[0.5, -0.2, 0.3, 0, 3.14, 0], a=1.2, v=0.25)  # Reduced speed by half\n    sleep(2.0)\n    movel(p[0.6, -0.1, 0.2, 0, 3.14, 0], a=1.2, v=0.25)  # Reduced speed by half\n    sleep(2.0)\n    popup(\"Robot has stopped moving.\", \"Movement Status\", warning=False)\nend\n```"
+    },
+    {
+        "name": "edit3",
+        "instruction": "Modify the provided URScript code to incorporate a 4-second delay between each movement command.",
+        "input": "def move_from_target():\n    local init_pose = p[0.5, -0.3, 0.4, 0, 0, 0]\n    local target_pose = p[0.6, -0.2, 0.5, 0, 0, 0]\n\n    movel(init_pose, a=0.2, v=0.5)\n    movel(target_pose, a=0.2, v=0.5)\nend",
+        "output": "```URscript\ndef move_from_target():\n  local init_pose = p[0.5, -0.3, 0.4, 0, 0, 0]\n  local target_pose = p[0.6, -0.2, 0.5, 0, 0, 0]\n\n  movel(init_pose, a=0.2, v=0.5)\n\n  # Wait 4 second between each movement\n  sleep(4)\n\n  movel(target_pose, a=0.2, v=0.5)\nend\n```"
+    },
+    {
+        "name": "hello1",
+        "instruction": "Create for me example of URscript",
+        "input": "<no_input>",
+        "output": "```URscript\n# Initialize variables and define positions\nglobal pose1 = p[0.2, -0.4, 0.3, 0, 3.14, 0]  # Pose 1 (X, Y, Z, Rx, Ry, Rz)\nglobal pose2 = p[0.4, -0.4, 0.3, 0, 3.14, 0]  # Pose 2\nglobal speed = 0.5  # Speed for movements\nglobal acceleration = 0.3  # Acceleration for movements\n\n# Define the program\ndef main():\n    # Move to the initial position\n    movej(pose1, a=acceleration, v=speed)\n    sleep(1)  # Wait for 1 second\n\n    # Turn on a digital output\n    set_digital_out(0, True)  # Set digital output 0 to True (on)\n    sleep(0.5)\n\n    # Move to the second position\n    movel(pose2, a=acceleration, v=speed)\n    sleep(1)\n\n    # Turn off the digital output\n    set_digital_out(0, False)  # Set digital output 0 to False (off)\n    sleep(0.5)\n\n    # Return to the initial position\n    movej(pose1, a=acceleration, v=speed)\n    sleep(1)\n\n    # Loop the actions\n    while True:\n        movel(pose2, a=acceleration, v=speed)\n        sleep(1)\n        movel(pose1, a=acceleration, v=speed)\n        sleep(1)\n\tend\nend\n```"
+    },
+    {
+        "name": "explain1",
+        "instruction": "Can you explain what the following URScript code does, step by step? I’m new to URScript and need to understand its purpose and functionality.",
+        "input": "def pick_and_place():\n    # Move to the start position\n    movel(p[0.3, -0.2, 0.4, 0, 3.14, 0], a=1.2, v=0.5)\n    \n    # Close the gripper to pick an object\n    set_digital_out(0, True)\n    sleep(1.0)\n    \n    # Move to the target position\n    movel(p[0.6, -0.1, 0.2, 0, 3.14, 0], a=1.2, v=0.5)\n    \n    # Open the gripper to release the object\n    set_digital_out(0, False)\n    sleep(1.0)\nend",
+        "output": "1. **Function Overview:**  \n   The function `pick_and_place` is a simple routine that demonstrates a robot's ability to pick up an object from a start position and place it at a target position.  \n\n2. **Step-by-Step Explanation:**  \n   - **Line 3:**  \n     The robot moves to the start position defined by the pose `p[0.3, -0.2, 0.4, 0, 3.14, 0]` using the `movel` function.  \n     - `a=1.2`: Specifies the acceleration during the movement.  \n     - `v=0.5`: Sets the movement speed.  \n\n   - **Line 6:**  \n     The `set_digital_out(0, True)` command activates the gripper (assuming digital output 0 controls the gripper), which closes it to pick up an object.  \n\n   - **Line 7:**  \n     The `sleep(1.0)` command causes the robot to wait for 1 second, allowing the gripper time to securely grasp the object.  \n\n   - **Line 10:**  \n     The robot moves to the target position defined by the pose `p[0.6, -0.1, 0.2, 0, 3.14, 0]`.  \n\n   - **Line 13:**  \n     The `set_digital_out(0, False)` command deactivates the gripper, releasing the object at the target position.  \n\n   - **Line 14:**  \n     Another `sleep(1.0)` command allows time for the object to be fully released before the robot proceeds.  \n\n3. **Purpose of the Code:**  \n   This function is typically used in automated workflows where a robot is required to handle objects, such as in assembly lines or packaging systems.\n\n4. **Simplified Summary:**  \n   - **Start Position:** Robot moves to a predefined point to pick up an object.  \n   - **Pick Object:** Activates the gripper and secures the object.  \n   - **Target Position:** Moves to the destination to place the object.  \n   - **Release Object:** Opens the gripper to drop the object at the target location."
+    },
+    {
+        "name": "todo4",
+        "instruction": "Refer to the comment to determine the correct URscipt code and substitute it for the \\\"TODO\\\".",
+        "input": "```URscript\ndef looped_motion():\n  local start_pose = p[0.3, -0.5, 0.4, 0, 0, 0]\n  local end_pose = p[0.3, 0.5, 0.4, 0, 0, 0]\n\n  # TODO: Repeat motion start_pose to end_pose 5 times\nend\n```",
+        "output": "```URscript\ndef looped_motion():\n    local start_pose = p[0.3, -0.5, 0.4, 0, 0, 0]\n    local end_pose = p[0.3, 0.5, 0.4, 0, 0, 0]\n\n    # TODO: Repeat motion start_pose to end_pose 5 times\n    loop_count = 0\n    while (Loop_1 < 5):    \n        movej(start_pose, a=1.39, v=1.04)\n        movej(end_pose, a=1.39, v=1.04)\n\n        loop_count = loop_count + 1\n    end\nend\n```"
+    },
+    {
+        "name": "todo1",
+        "instruction": "Using the comment as a guide, replace the \\\"TODO\\\" comment in the code with the proper URscript code.",
+        "input": "```URscript\ndef move_from_target():\n  local init_pose = p[0.5, -0.3, 0.4, 0, 0, 0]\n  local target_pose = p[0.6, -0.2, 0.5, 0, 0, 0]\n\n  movel(init_pose, a=0.2, v=0.5)\n\n  # TODO: Wait for 2 seconds\n\n  movel(target_pose, a=0.2, v=0.5)\nend\n```",
+        "output": "```URscript\ndef move_from_target():\n  local init_pose = p[0.5, -0.3, 0.4, 0, 0, 0]\n  local target_pose = p[0.6, -0.2, 0.5, 0, 0, 0]\n\n  movel(init_pose, a=0.2, v=0.5)\n\n  # TODO: Wait for 2 seconds\n  sleep(2)\n\n  movel(target_pose, a=0.2, v=0.5)\nend\n```"
+    },
+    {
+        "name": "todo2",
+        "instruction": "Consult the comment and use it to write the correct URscript code in place of the \\\"TODO\\\".",
+        "input": "```URscript\ndef move_to_target_and_popup():\n  local target_pose = p[0.6, -0.2, 0.2, 0, 0, 0]\n\n  movej(target_pose, a=0.2, v=0.5)\n\n  # TODO: Display a message on URSim when moving done\nend\n```",
+        "output": "```URscript\ndef move_to_target_and_popup():\n    local target_pose = p[0.6, -0.2, 0.5, 0, 0, 0]\n\n    movel(target_pose, a=0.2, v=0.5)\n\n    # TODO: Display a message on URSim when moving done\n    popup(\"Message\", title=\"Message\", blocking=True)\nend\n```"
+    },
+    {
+        "name": "todo5",
+        "instruction": "Complete the \\\"TODO\\\" by writing the appropriate URscipt code, as guided by the comment.",
+        "input": "```URscript\ndef example_movej_with_input_check():\n  local pos1 = p[0.2, 0.4, 0.3, 0, 3.14, 0]\n  local pos2 = p[0.4, 0.2, 0.3, 0, 3.14, 0]\n  \n  if get_digital_in(0):\n    # TODO: if input is HIGH (1), move to Position 1\n  else:\n    # TODO: if input is LOW (0), move to Position 2\nend\n```",
+        "output": "```URscript\ndef example_movej_with_input_check():\n    local pos1 = p[0.2, 0.4, 0.3, 0, 3.14, 0]\n    local pos2 = p[0.4, 0.2, 0.3, 0, 3.14, 0]\n  \n    if get_digital_in(0):\n        # TODO: If input is HIGH (1), move to Position 1\n        movej(pos1, a=1.2, v=0.25)\n    else:\n        # TODO: If input is LOW (0), move to Position 2\n        movej(pos2, a=1.2, v=0.25)\nend\n```"
+    },
+    {
+        "name": "todo3",
+        "instruction": "Following the instructions in the comment, replace the \\\"TODO\\\" placeholder with the actual URscript code.",
+        "input": "```URscript\ndef pick_and_place():\n    local pick_position = [0.2, -1.2, 1.0, 0.0, 1.57, 0.0]    \n    local place_position = [0.5, -1.2, 1.0, 0.0, 1.57, 0.0]\n\n    movej(pick_position, a=1.2, v=0.25)\n    sleep(0.5)\n\n    # TODO: Simulate closing the gripper (assuming Digital Output 0 controls gripper)\n    sleep(0.5)  # Pause for grip to engage\n\n    movej([0.2, -1.0, 1.0, 0.0, 1.57, 0.0], a=1.2, v=0.25)  # Move up slightly\n\n    movej(place_position, a=1.2, v=0.25)\n    sleep(0.5)\n\n    # TODO: Release the object\n    sleep(0.5)  # Pause for release\n\n    movej([0, -1.57, 1.57, 0.0, 1.57, 0.0], a=1.2, v=0.25)\n\nend\n```",
+        "output": "```URscript\ndef pick_and_place():\n  local pick_position = [0.2, -1.2, 1.0, 0.0, 1.57, 0.0]    \n  local place_position = [0.5, -1.2, 1.0, 0.0, 1.57, 0.0]\n\n  movej(pick_position, a=1.2, v=0.25)\n  sleep(0.5)\n\n  # TODO: Simulate closing the gripper (assuming Digital Output 0 controls gripper)\n  set_digital_out(0, True)\n  sleep(0.5)  # Pause for grip to engage\n\n  movej([0.2, -1.0, 1.0, 0.0, 1.57, 0.0], a=1.2, v=0.25)  # Move up slightly\n\n  movej(place_position, a=1.2, v=0.25)\n  sleep(0.5)\n\n  set_digital_out(0, False)\n  sleep(0.5)  # Pause for release\n\n  movej([0, -1.57, 1.57, 0.0, 1.57, 0.0], a=1.2, v=0.25)\n\nend\n```"
+    },
+    {
+        "name": "movel05",
+        "instruction": "Define a function in URscript that continuously moves the robot between two predefined positions in a straight line, with specified acceleration, velocity, and time for each move. The script uses transformations based on the robot's current TCP position to ensure accurate motion.",
+        "input": "<no_input>",
+        "output": "```URscript\ndef move_linear():\n    local Waypoint_1_p=p[-0.13, -0.26, 0.14, -0.001, 3.11, 0.03] \n    local Waypoint_2_p=p[-0.008, -0.26, 0.28, -0.27, -2.71, 0.217] \n\n    while (True):\n        movel(Waypoint_1_p, a=1.2, v=0.25, t=2.0)\n    \tmovel(Waypoint_2_p, a=0.78, v=0.87, t=3.0)\n    end\nend\n```"
+    },
+    {
+        "name": "movep02",
+        "instruction": "Define a function in URScript that continuously moves the robot back and forth between two predefined 6D waypoints, adjusting for the TCP offset, using smooth linear motion with specified acceleration, velocity, and blending radius for each transition.",
+        "input": "<no_input>",
+        "output": "```URscript\ndef move_process():\n    local Waypoint_1_p=p[-0.13, -0.26, 0.14, -0.001, 3.11, 0.03] \n    local Waypoint_2_p=p[-0.008, -0.26, 0.28, -0.27, -2.71, 0.217] \n\n    while (True):\n        movep(pose_trans(Waypoint_1_p, get_tcp_offset()), a=1.2, v=0.25, r=0.025)\n        movep(pose_trans(Waypoint_2_p, get_tcp_offset()), a=0.78, v=0.87, r=0.02)\n    end\nend\n```"
+    },
+    {
+        "name": "movej05",
+        "instruction": "Define a function in URscript that continuously moves the robot between two predefined joint positions with specific acceleration, velocity, and time settings for each movement. The positions are defined in 3D space with corresponding joint angles, and the robot moves between them in a loop.",
+        "input": "<no_input>",
+        "output": "```URscript\ndef move_joint():\n    local Waypoint_1_p=p[-0.13, -0.26, 0.14, -0.001, 3.11, 0.03] \n    local Waypoint_1_q=[-1.6, -1.72, -2.2, -0.8, 1.59, -0.03] # radian\n\n    local Waypoint_2_p=p[-0.008, -0.26, 0.28, -0.27, -2.71, 0.217] \n    local Waypoint_2_q=[-0.92, -1.26, -1.88, -1.73, 1.16, 0.88] # radian\n\n    while (True):\n        movej(get_inverse_kin(Waypoint_1_p, qnear=Waypoint_1_q), a=1.39, v=1.04, t=2.0)\n    \tmovej(get_inverse_kin(Waypoint_2_p, qnear=Waypoint_2_q), a=0.78, v=0.87, t=3.0)\n    end\nend\n```"
+    },
+    {
+        "name": "movel04",
+        "instruction": "Define a function in URscript to repeatedly move the robot in a straight line between two predefined positions. The motion between each position is performed with specific accelerations, velocities, and blending radius, ensuring smooth transitions in the robot's path.",
+        "input": "<no_input>",
+        "output": "```URscript\ndef move_linear():\n    local Waypoint_1_p=p[-0.13, -0.26, 0.14, -0.001, 3.11, 0.03] \n    local Waypoint_2_p=p[-0.008, -0.26, 0.28, -0.27, -2.71, 0.217] \n\n    while (True):\n        movel(Waypoint_1_p, a=1.2, v=0.25, r=0.05)\n    \tmovel(Waypoint_2_p, a=0.78, v=0.87, r=0.06)\n    end\nend\n```"
+    },
+    {
+        "name": "movel02",
+        "instruction": "Define a function in URscript that moves the robot arm back and forth between two predefined linear positions in the workspace. The movement should be executed continuously, with each move adjusted for the current TCP offset, using specified acceleration and speed parameters for each waypoint.",
+        "input": "<no_input>",
+        "output": "```URscript\ndef move_linear():\n    local Waypoint_1_p=p[-0.13, -0.26, 0.14, -0.001, 3.11, 0.03] \n    local Waypoint_2_p=p[-0.008, -0.26, 0.28, -0.27, -2.71, 0.217] \n\n    while (True):\n        movel(pose_trans(Waypoint_1_p, get_tcp_offset()), a=1.2, v=0.25)\n        movel(pose_trans(Waypoint_2_p, get_tcp_offset()), a=0.78, v=0.87)\n    end\nend\n```"
+    },
+    {
+        "name": "movel01",
+        "instruction": "Define a function in URscript that continuously moves the robot in a straight line between two predefined positions in space. The movement occurs with specified acceleration and velocity values, ensuring smooth transitions between the two waypoints.",
+        "input": "<no_input>",
+        "output": "```URscript\ndef move_linear():\n    local Waypoint_1_p=p[-0.13, -0.26, 0.14, -0.001, 3.11, 0.03] \n    local Waypoint_2_p=p[-0.008, -0.26, 0.28, -0.27, -2.71, 0.217] \n\n    while (True):\n        movel(Waypoint_1_p, a=1.2, v=0.25)\n    \tmovel(Waypoint_2_p, a=0.78, v=0.87)\n    end\nend\n```"
+    },
+    {
+        "name": "movej09",
+        "instruction": "Define a function in URscript that repeatedly moves the robot to a predefined joint position while managing concurrent thread execution. The code creates a new thread to handle the motion, ensuring safe operation by using critical sections to synchronize access to shared variables, and waits for the movement to complete before continuing the loop.",
+        "input": "<no_input>",
+        "output": "```URscript\ndef move_joint():\n    local Waypoint_1_p = p[-0.13, -0.26, 0.14, -0.001, 3.11, 0.03]\n    local Waypoint_1_q = [-1.6, -1.72, -2.2, -0.8, 1.59, -0.03]\n\n    while (True):\n        global move_thread_flag = 0\n        thread move_thread():\n            enter_critical\n            move_thread_flag = 1\n            movej(get_inverse_kin(Waypoint_1_p, qnear=Waypoint_1_q), a=1.39, v=1.04)\n            move_thread_flag = 2\n            exit_critical\n        end\n        move_thread_flag = 0\n        move_thread_han = run move_thread()\n        while (True):\n            sleep(1.0E-10)\n            if (move_thread_flag > 1):\n                join move_thread_han\n                break\n            end\n            sync()\n        end\n    end\nend\n```"
+    },
+    {
+        "name": "movej07",
+        "instruction": "Define a function in URscript that moves the robot to a specified joint position repeatedly, using a separate thread for movement. The movement can be interrupted by a digital input, and the script ensures safe execution by managing thread synchronization and critical section access.",
+        "input": "<no_input>",
+        "output": "```URscript\ndef move_joint():\n    local Waypoint_1_p=p[-0.13, -0.26, 0.14, -0.001, 3.11, 0.03]\n    local Waypoint_1_q=[-1.6, -1.72, -2.2, -0.8, 1.59, -0.03]\n\n    while (True):\n        local move_thread_flag=0\n        thread move_thread():\n            enter_critical\n            move_thread_flag = 1\n            movej(get_inverse_kin(Waypoint_1_p, qnear=Waypoint_1_q), a=1.39, v=1.04)\n            move_thread_flag = 2\n            exit_critical\n        end\n\n        move_thread_flag = 0\n        move_thread_han = run move_thread()\n        while (True):\n            if (get_standard_digital_in(0) == 1):\n                kill move_thread_han\n                stopj(1.39)\n                break\n            end\n            sleep(1.0E-10)\n            if (move_thread_flag > 1):\n                join move_thread_han\n                break\n            end\n            sync()\n        end\n    end\nend\n```"
+    },
+    {
+        "name": "movej10",
+        "instruction": "Define a function in URscript that repeatedly initiates a threaded motion to a specified joint position while monitoring a digital input signal. If the signal is low, the script will stop the motion, terminate the thread, and break the loop. The function ensures thread safety using critical sections and manages synchronization between the motion and input monitoring.",
+        "input": "<no_input>",
+        "output": "```URscript\ndef move_joint():\n    local Waypoint_1_p = p[-0.13, -0.26, 0.14, -0.001, 3.11, 0.03]\n    local Waypoint_1_q = [-1.6, -1.72, -2.2, -0.8, 1.59, -0.03]\n\n    while (True):\n        global move_thread_flag = 0\n        thread move_thread():\n            enter_critical\n            move_thread_flag = 1\n            movej(get_inverse_kin(Waypoint_1_p, qnear=Waypoint_1_q), a=1.39, v=1.04)\n            move_thread_flag = 2\n            exit_critical\n        end\n        move_thread_flag = 0\n        move_thread_han = run move_thread()\n        while (True):\n            if (get_standard_digital_in(0) == False):\n                kill move_thread_han\n                stopj(3.141592653589793)\n                break\n            end\n            sleep(1.0E-10)\n            if (move_thread_flag > 1):\n                join move_thread_han\n                break\n            end\n            sync()\n        end\n    end\nend\n```"
+    },
+    {
+        "name": "movej04",
+        "instruction": "Define a function in URscript that continuously moves the robot between two predefined joint configurations, with specified accelerations, velocities, and blending radius, while adjusting the position relative to the base frame using inverse kinematics.",
+        "input": "<no_input>",
+        "output": "```URscript\ndef move_joint():\n    local Waypoint_1_p=p[-0.13, -0.26, 0.14, -0.001, 3.11, 0.03] \n    local Waypoint_1_q=[-1.6, -1.72, -2.2, -0.8, 1.59, -0.03] # radian\n\n    local Waypoint_2_p=p[-0.008, -0.26, 0.28, -0.27, -2.71, 0.217] \n    local Waypoint_2_q=[-0.92, -1.26, -1.88, -1.73, 1.16, 0.88] # radian\n\n    while (True):\n    \tmovej(get_inverse_kin(Waypoint_1_p, qnear=Waypoint_1_q), a=1.39, v=1.04, r=0.05)\n    \tmovej(get_inverse_kin(Waypoint_2_p, qnear=Waypoint_2_q), a=0.78, v=0.87, r=0.06)\n    end\nend\n```"
+    },
+    {
+        "name": "movej01",
+        "instruction": "Define a function in URscript that continuously alternates the robot's movement between two predefined positions, using specified joint angles, accelerations, and speeds, while accounting for the active TCP. The positions are defined in Cartesian space and transformed into joint configurations for execution.",
+        "input": "<no_input>",
+        "output": "```URscript\ndef move_joint():\n    local Waypoint_1_p=p[-0.13, -0.26, 0.14, -0.001, 3.11, 0.03] \n    local Waypoint_1_q=[-1.6, -1.72, -2.2, -0.8, 1.59, -0.03] # radian\n\n    local Waypoint_2_p=p[-0.008, -0.26, 0.28, -0.27, -2.71, 0.217] \n    local Waypoint_2_q=[-0.92, -1.26, -1.88, -1.73, 1.16, 0.88] # radian\n\n    while (True):\n    \tmovej(get_inverse_kin(Waypoint_1_p, qnear=Waypoint_1_q), a=1.39, v=1.04)\n    \tmovej(get_inverse_kin(Waypoint_2_p, qnear=Waypoint_2_q), a=0.78, v=0.87)\n    end\nend\n```"
+    },
+    {
+        "name": "movep01",
+        "instruction": "Define a function in URscript that continuously moves the robot between two predefined positions in Cartesian space with specified speeds, accelerations, and blending radius. The robot transitions smoothly between the positions, adjusting its trajectory according to the given parameters for each movement.",
+        "input": "<no_input>",
+        "output": "```URscript\ndef move_process():\n    local Waypoint_1_p=p[-0.13, -0.26, 0.14, -0.001, 3.11, 0.03] \n    local Waypoint_2_p=p[-0.008, -0.26, 0.28, -0.27, -2.71, 0.217] \n\n    while (True):\n        movep(Waypoint_1_p, a=1.2, v=0.25, r=0.025)\n        movep(Waypoint_2_p, a=0.78, v=0.87, r=0.02)\n    end\nend\n```"
+    },
+    {
+        "name": "movej08",
+        "instruction": "Define a URscript function that repeatedly moves the robot to a specified waypoint in joint space while monitoring for tool contact. If contact is detected, the robot retracts slightly from the contact point and then continues its movement, using multithreading to handle the motion and collision detection concurrently.",
+        "input": "<no_input>",
+        "output": "```URscript\ndef move_joint():\n    local Waypoint_1_p = p[-0.13, -0.26, 0.14, -0.001, 3.11, 0.03]\n    local Waypoint_1_q = [-1.6, -1.72, -2.2, -0.8, 1.59, -0.03]\n\n    while (True):\n        global move_thread_flag_3 = 0\n        thread move_thread_3():\n            enter_critical\n            move_thread_flag_3 = 1\n            movej(get_inverse_kin(Waypoint_1_p, qnear=Waypoint_1_q), a=1.39, v=1.04)\n            move_thread_flag_3 = 2\n            exit_critical\n        end\n\n        move_thread_flag_3 = 0\n        move_thread_han_3 = run move_thread_3()\n\n        while (True):\n            local targetTcpDirection = get_target_tcp_speed()\n            local stepsToRetract = tool_contact(direction=targetTcpDirection)\n            if (stepsToRetract > 0):\n                kill move_thread_han_3\n                stopj(34.9)\n                local backTrackMovement = get_actual_joint_positions_history(stepsToRetract)\n                local contactPose = get_forward_kin(backTrackMovement)\n                local posDir = [targetTcpDirection[0], targetTcpDirection[1], targetTcpDirection[2]]\n                local retractTo = contactPose\n                if (norm(posDir) > 1e-6):\n                    local normalizedPosDir = normalize(posDir)\n\n                    # distance is 0.001\n                    local additionalRetraction = p[normalizedPosDir[0] * 0.001, normalizedPosDir[1] * 0.001, normalizedPosDir[2] * 0.001, 0, 0, 0] \n\n                    retractTo = pose_sub(contactPose, additionalRetraction)\n                end\n                movej(retractTo, a=34.9, v=0.1)\n                break\n            end\n            sleep(1.0E-10)\n            if (move_thread_flag_3 > 1):\n                join move_thread_han_3\n                break\n            end\n            sync()\n        end\n    end\nend\n```"
+    },
+    {
+        "name": "movej02",
+        "instruction": "Define a function in URscript that moves the robot continuously between two predefined waypoints in 3D space. Each waypoint is specified with a target position, orientation, and a preferred joint configuration. The motion accounts for the TCP offset and uses specified acceleration and velocity values for smooth transitions.",
+        "input": "<no_input>",
+        "output": "```URscript\ndef move_joint():\n    local Waypoint_1_p=p[-0.13, -0.26, 0.14, -0.001, 3.11, 0.03] \n    local Waypoint_1_q=[-1.6, -1.72, -2.2, -0.8, 1.59, -0.03] # radian\n\n    local Waypoint_2_p=p[-0.008, -0.26, 0.28, -0.27, -2.71, 0.217] \n    local Waypoint_2_q=[-0.92, -1.26, -1.88, -1.73, 1.16, 0.88] # radian\n\n    while (True):\n        movej(get_inverse_kin(pose_trans(Waypoint_1_p, get_tcp_offset()), qnear=Waypoint_1_q), a=1.39, v=1.04)\n        movej(get_inverse_kin(pose_trans(Waypoint_2_p, get_tcp_offset()), qnear=Waypoint_2_q), a=0.78, v=0.87)\n    end\nend\n```"
+    },
+    {
+        "name": "movel06",
+        "instruction": "Define a function in URscript that repeatedly moves the robot along a linear path between two predefined positions, adjusting the TCP pose based on the difference between the two waypoints. The movement occurs with specified acceleration and velocity values, continuously repeating the motion.",
+        "input": "<no_input>",
+        "output": "```URscript\ndef move_linear():\n    local Waypoint_1_from_p=p[-0.13, -0.26, 0.14, -0.001, 3.11, 0.03]\n    local Waypoint_1_to_p=p[-0.008, -0.26, 0.28, -0.27, -2.71, 0.217]\n\n    while (True):\n        movel(pose_add(get_target_tcp_pose(), pose_sub(Waypoint_1_to_p, Waypoint_1_from_p)), a=1.2, v=0.25)\n    end\nend\n```"
+    },
+    {
+        "name": "movej06",
+        "instruction": "Define a function in URscript that repeatedly moves the robot to a position relative to its current TCP, based on a predefined offset. The movement is continuous, using specified acceleration and velocity values.",
+        "input": "<no_input>",
+        "output": "```URscript\ndef move_joint_relative():\n    local Waypoint_1_from_p=p[-0.13, -0.26, 0.14, -0.001, 3.11, 0.03]\n    local Waypoint_1_to_p=p[-0.04, -0.2, 0.11, -0.004, 3.11, -0.18]\n    while (True):\n        movej(pose_add(get_target_tcp_pose(), pose_sub(Waypoint_1_to_p, Waypoint_1_from_p)), a=1.39, v=1.04)\n    end\nend\n```"
+    },
+    {
+        "name": "movep04",
+        "instruction": "Define a function in URscript that continuously moves the robot along a predefined path, starting at a waypoint, then transitioning through a via point to an endpoint, using smooth linear and circular motions with specified acceleration, velocity, and blending.",
+        "input": "<no_input>",
+        "output": "```URscript\ndef move_process():\n    global Waypoint_1_p=p[-0.13, -0.26, 0.14, -0.001, 3.11, 0.03]\n    global ViaPoint_1_p=p[-0.08, -0.23, 0.14, -0.001, 3.11, 0.03]\n    global EndPoint_1_p=p[-0.03, -0.2, 0.17, 0.07, 3.11, 0.03]\n\n    while (True):\n        movep(Waypoint_1_p, a=1.2, v=0.25, r=0.025)\n        movec(ViaPoint_1_p, EndPoint_1_p, a=1.2, v=0.25, r=0.025)\n    end\nend\n```"
+    },
+    {
+        "name": "movej11",
+        "instruction": "Define a function in URscript that continuously moves the robot to a predefined position in joint space, using a specific acceleration and speed. The movement occurs in a separate thread, and the function monitors a sensor input to stop the motion when a threshold is exceeded, safely terminating the thread and halting the robot.",
+        "input": "<no_input>",
+        "output": "```URscript\ndef move_joint():\n    local Waypoint_1_p = p[-0.13, -0.26, 0.14, -0.001, 3.11, 0.03]\n    local Waypoint_1_q = [-1.6, -1.72, -2.2, -0.8, 1.59, -0.03]\n\n    while (True):\n        global move_thread_flag = 0\n        thread move_thread():\n            enter_critical\n            move_thread_flag = 1\n            movej(get_inverse_kin(Waypoint_1_p, qnear=Waypoint_1_q), a=1.39, v=1.04)\n            move_thread_flag = 2\n            exit_critical\n        end\n        move_thread_flag = 0\n        move_thread_han = run move_thread()\n        while (True):\n            if (get_standard_analog_in(0) > 4.0):\n                kill move_thread_han\n                stopj(3.141592653589793)\n                break\n            end\n            sleep(1.0E-10)\n            if (move_thread_flag > 1):\n                join move_thread_han\n                break\n            end\n            sync()\n        end\n    end\nend\n```"
+    },
+    {
+        "name": "movel03",
+        "instruction": "Define a function in URscript that moves the robot arm back and forth between two positions in Cartesian space using linear interpolation. The robot's end effector is set to a manual TCP before each movement, with specified accelerations and velocities for the transitions between the waypoints.",
+        "input": "<no_input>",
+        "output": "```URscript\ndef move_linear():\n    local Waypoint_1_p=p[-0.13, -0.26, 0.14, -0.001, 3.11, 0.03] \n    local Waypoint_2_p=p[-0.008, -0.26, 0.28, -0.27, -2.71, 0.217] \n\n    while (True):\n    \t# set manual TCP\n        set_tcp(p[0.0,0.0,0.0,0.0,0.0,0.0])\n\n        movel(Waypoint_1_p, a=1.2, v=0.25)\n    \tmovel(Waypoint_2_p, a=0.78, v=0.87)\n    end\nend\n```"
+    },
+    {
+        "name": "movep03",
+        "instruction": "Define a function in URscript to repeatedly move the robot along a predefined motion sequence, starting at a waypoint, transitioning through a via point, and ending at a final position, using a combination of linear and circular movements with specified acceleration, velocity, and blending radius.",
+        "input": "<no_input>",
+        "output": "```URscript\ndef move_process():\n    global Waypoint_1_p=p[-0.13, -0.26, 0.14, -0.001, 3.11, 0.03]\n    global ViaPoint_1_p=p[-0.08, -0.23, 0.14, -0.001, 3.11, 0.03]\n    global EndPoint_1_p=p[-0.03, -0.2, 0.17, 0.07, 3.11, 0.03]\n\n    while (True):\n        movep(Waypoint_1_p, a=1.2, v=0.25, r=0.025)\n        movec(ViaPoint_1_p, EndPoint_1_p, a=1.2, v=0.25, r=0.025, mode=1)\n    end\nend\n```"
+    },
+    {
+        "name": "movej03",
+        "instruction": "Define a function in URscript that continuously moves the robot between two predefined joint positions with specified accelerations and speeds. The movement alternates between the two positions in an infinite loop.",
+        "input": "<no_input>",
+        "output": "```URscript\ndef move_joint():\n  local Waypoint_1_q=[-1.6, -1.72, -2.2, -0.8, 1.59, -0.03] # radian\n\n  local Waypoint_2_q=[-0.92, -1.26, -1.88, -1.73, 1.16, 0.88] # radian\n\n  while (True):\n      movej(Waypoint_1_q, a=1.39, v=1.04)\n      movej(Waypoint_2_q, a=0.78, v=0.87)\n  end\nend\n```"
+    },
+    {
+        "name": "syntax1",
+        "instruction": "I have a URScript program with syntax errors. Can you help me fix them? Here's the script:",
+        "input": "def move_robot_to_home():\n    movej([0, -1.57, 1.57, 0, 1.57, 0])  # Missing closing bracket\n    set_digital_out(2, True)\n    wait(1)\n    set_digital_out(2, False",
+        "output": "def move_robot_to_home():\n    movej([0, -1.57, 1.57, 0, 1.57, 0])  # Corrected missing closing bracket\n    set_digital_out(2, True)\n    wait(1)\n    set_digital_out(2, False)  # Added missing closing parenthesis\nend  # Fixed improper indentation and removed redundant \"end\""
+    }
+]

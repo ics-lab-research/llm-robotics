@@ -1,0 +1,15 @@
+```URscript
+def looped_motion():
+    local start_pose = p[0.3, -0.5, 0.4, 0, 0, 0]
+    local end_pose = p[0.3, 0.5, 0.4, 0, 0, 0]
+
+    # TODO: Repeat motion start_pose to end_pose 5 times
+    loop_count = 0
+    while (Loop_1 < 5):    
+        movej(start_pose, a=1.39, v=1.04)
+        movej(end_pose, a=1.39, v=1.04)
+
+        loop_count = loop_count + 1
+    end
+end
+```

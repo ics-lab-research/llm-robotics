@@ -1,0 +1,15 @@
+def pick_and_place():
+    # Move to the start position
+    movel(p[0.3, -0.2, 0.4, 0, 3.14, 0], a=1.2, v=0.5)
+    
+    # Close the gripper to pick an object
+    set_digital_out(0, True)
+    sleep(1.0)
+    
+    # Move to the target position
+    movel(p[0.6, -0.1, 0.2, 0, 3.14, 0], a=1.2, v=0.5)
+    
+    # Open the gripper to release the object
+    set_digital_out(0, False)
+    sleep(1.0)
+end

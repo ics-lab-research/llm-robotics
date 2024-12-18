@@ -1,0 +1,6 @@
+def move_robot_to_home():
+    movej([0, -1.57, 1.57, 0, 1.57, 0])  # Corrected missing closing bracket
+    set_digital_out(2, True)
+    wait(1)
+    set_digital_out(2, False)  # Added missing closing parenthesis
+end  # Fixed improper indentation and removed redundant "end"

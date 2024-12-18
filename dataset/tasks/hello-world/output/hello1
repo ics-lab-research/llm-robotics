@@ -1,0 +1,38 @@
+```URscript
+# Initialize variables and define positions
+global pose1 = p[0.2, -0.4, 0.3, 0, 3.14, 0]  # Pose 1 (X, Y, Z, Rx, Ry, Rz)
+global pose2 = p[0.4, -0.4, 0.3, 0, 3.14, 0]  # Pose 2
+global speed = 0.5  # Speed for movements
+global acceleration = 0.3  # Acceleration for movements
+
+# Define the program
+def main():
+    # Move to the initial position
+    movej(pose1, a=acceleration, v=speed)
+    sleep(1)  # Wait for 1 second
+
+    # Turn on a digital output
+    set_digital_out(0, True)  # Set digital output 0 to True (on)
+    sleep(0.5)
+
+    # Move to the second position
+    movel(pose2, a=acceleration, v=speed)
+    sleep(1)
+
+    # Turn off the digital output
+    set_digital_out(0, False)  # Set digital output 0 to False (off)
+    sleep(0.5)
+
+    # Return to the initial position
+    movej(pose1, a=acceleration, v=speed)
+    sleep(1)
+
+    # Loop the actions
+    while True:
+        movel(pose2, a=acceleration, v=speed)
+        sleep(1)
+        movel(pose1, a=acceleration, v=speed)
+        sleep(1)
+	end
+end
+```
