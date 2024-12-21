@@ -1,0 +1,1 @@
+Define a function in URscript that converts a 3D rotation vector into its corresponding 3x3 rotation matrix. The function calculates the rotation angle and axis from the input vector, applies the Rodrigues' rotation formula, and returns the rotation matrix as a flattened array of nine elements.

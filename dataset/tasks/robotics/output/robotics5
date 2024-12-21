@@ -1,0 +1,15 @@
+```URscipt
+def cross_product(u, v):
+	
+	u1 = u[0]
+	u2 = u[1]
+	u3 = u[2]
+	v1 = v[0]
+	v2 = v[1]
+	v3 = v[2]
+	
+	s = [ (u2*v3-u3*v2), (u3*v1-u1*v3), (u1*v2-u2*v1) ]
+	
+	return s
+end
+```

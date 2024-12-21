@@ -1,0 +1,11 @@
+```URscipt
+def frame_base2tool(rotvec, p_base):
+
+	pose_rotvec = p[ 0, 0, 0, rotvec[0], rotvec[1], rotvec[2] ]
+	pose_p_base = p[ p_base[0], p_base[1], p_base[2], 0, 0, 0 ]
+		
+	p_tool = pose_trans(pose_inv(pose_rotvec), pose_p_base)
+
+	return p_tool
+end
+```

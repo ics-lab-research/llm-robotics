@@ -1,0 +1,1 @@
+Define a function in URscript that converts a 3x3 rotation matrix into its corresponding roll, pitch, and yaw (RPY) angles. The function accounts for potential gimbal lock conditions, ensuring the output angles remain valid. It returns the computed RPY angles in an array.

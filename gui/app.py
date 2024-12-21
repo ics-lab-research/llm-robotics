@@ -5,7 +5,7 @@ import os
 from dotenv import load_dotenv
 
 # load from .env file
-load_dotenv()
+load_dotenv(dotenv_path="../.env")
 
 
 # template for getting start with llm

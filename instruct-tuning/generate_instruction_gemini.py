@@ -34,14 +34,14 @@ from post_process_utils import post_process_gemini_response
 
 
 # Load environment variables from the .env file
-load_dotenv()
+load_dotenv(dotenv_path="../.env")
 
 genai.configure(api_key=os.environ["GEMINI_API"])
 
 
 def generate_instruction_following_data(
     seed_tasks_path="./prompts/seed_tasks.json",
-    generated_instruction_path="./prompts/gen_instructions.json",
+    generated_instruction_path="./results/gen_instructions.json",
     # filtered_instruction_path="./prompts/gen_instructions.json",
     num_instructions_to_generate=100,  # 20K samples
     model_name="gemini-2.0-flash-exp",  # TODO: change to pro
@@ -50,7 +50,12 @@ def generate_instruction_following_data(
     temperature=1.0,
     top_p=1.0,
     num_cpus=16,
+    attempts=0,  # change name of output, testing purpose
 ):
+    # change name of output
+    if attempts != 0:
+        generated_instruction_path = f"./results/gen_instructions_{attempts}.json"
+
     # init some variable
     request_idx = 0
     seed_instruction_data = seed_instruction_data_loader(seed_tasks_path)

@@ -1,0 +1,1 @@
+Define a function in URscript to calculate the cross product of two 3D vectors. The function takes two input vectors and returns a new vector that is perpendicular to both inputs, determined using the standard cross product formula. This is useful for applications involving vector operations in robotics or 3D space calculations.

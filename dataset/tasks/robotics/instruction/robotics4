@@ -1,0 +1,1 @@
+Define a function in URscript that converts a 3x3 rotation matrix into an equivalent rotation vector representation. The function calculates the rotation angle and axis from the matrix, handling edge cases such as near-180-degree rotations, and outputs the corresponding rotation vector.

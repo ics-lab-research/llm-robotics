@@ -1,0 +1,36 @@
+```URscipt
+def rotmat2rpy(rotmat):
+
+	# array to matrix
+	r11 = rotmat[0]
+	r21 = rotmat[1]
+	r31 = rotmat[2]
+	r12 = rotmat[3]
+	r22 = rotmat[4]
+	r32 = rotmat[5]
+	r13 = rotmat[6]
+	r23 = rotmat[7]
+	r33 = rotmat[8]
+
+	# rotation matrix to rpy
+	beta = atan2(-r31,sqrt(r11*r11+r21*r21))
+
+	if beta > d2r(89.99):
+		beta = d2r(89.99)
+		alpha = 0
+		gamma = atan2(r12,r22)
+	elif beta < -d2r(89.99):
+		beta = -d2r(89.99)
+		alpha = 0
+		gamma = -atan2(r12,r22)
+	else:
+		cb = cos(beta)
+		alpha = atan2(r21/cb,r11/cb)
+		gamma = atan2(r32/cb,r33/cb)
+	end
+
+	rpy = [ gamma, beta, alpha]
+  
+	return rpy
+end
+```

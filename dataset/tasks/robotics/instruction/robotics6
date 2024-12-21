@@ -1,0 +1,1 @@
+Define a function in URscript to compute a position in the robot's base coordinate system from a given position in the tool's coordinate system. The function takes a rotational vector and a tool frame position as inputs, combines them into a transformation, and returns the corresponding position in the base frame.

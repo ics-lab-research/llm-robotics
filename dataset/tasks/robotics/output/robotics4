@@ -1,0 +1,52 @@
+```URscipt
+def rotmat2rotvec(rotmat):
+
+	# array to matrix
+	r11 = rotmat[0]
+	r21 = rotmat[1]
+	r31 = rotmat[2]
+	r12 = rotmat[3]
+	r22 = rotmat[4]
+	r32 = rotmat[5]
+	r13 = rotmat[6]
+	r23 = rotmat[7]
+	r33 = rotmat[8]
+
+	# rotation matrix to rotation vector
+	theta = acos((r11+r22+r33-1)/2)
+	sth = sin(theta)
+	
+	if ( (theta > d2r(179.99)) or (theta < d2r(-179.99)) ):
+		theta = d2r(180)
+		if (r21 < 0):
+			if (r31 < 0):
+				ux = sqrt((r11+1)/2)
+				uy = -sqrt((r22+1)/2)
+				uz = -sqrt((r33+1)/2)
+			else:
+				ux = sqrt((r11+1)/2)
+				uy = -sqrt((r22+1)/2)
+				uz = sqrt((r33+1)/2)
+			end
+		else:
+			if (r31 < 0):
+				ux = sqrt((r11+1)/2)
+				uy = sqrt((r22+1)/2)
+				uz = -sqrt((r33+1)/2)
+			else:
+				ux = sqrt((r11+1)/2)
+				uy = sqrt((r22+1)/2)
+				uz = sqrt((r33+1)/2)
+			end
+		end
+	else:
+		ux = (r32-r23)/(2*sth)
+		uy = (r13-r31)/(2*sth)
+		uz = (r21-r12)/(2*sth)
+	end
+	
+	rotvec = [(theta*ux),(theta*uy),(theta*uz)]
+
+	return rotvec
+end
+```

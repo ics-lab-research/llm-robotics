@@ -1,0 +1,1 @@
+Define a function in URscript that converts a position described in a base coordinate frame to the corresponding position in a tool coordinate frame. The function takes a rotation vector and a position in the base frame as inputs, applies the necessary transformations, and returns the position in the tool frame.

@@ -1,0 +1,1 @@
+Define a function in URscript that converts a set of roll, pitch, and yaw angles (RPY) into a 3x3 rotation matrix. The function uses trigonometric calculations to compute the matrix elements and returns them as a flat array. This matrix represents the orientation corresponding to the given RPY angles.
