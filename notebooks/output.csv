@@ -1,0 +1,1540 @@
+instruction,input,output
+"Given the following URScript code snippet, identify and correct any syntax or logic errors. Explain the changes you’ve made.","```URscript
+def broken_program():
+  movej p[0.3, -0.5, 0.2, 0, 0, 0], a=1.0, v = 0.5
+  sleep(1)
+  move1(p[0.5, -0.5, 0.2, 0, 0, 0], a=1.2, v=0.7
+  end
+```","```URscript
+def fixed_program():
+    movej(p[0.3, -0.5, 0.2, 0, 0, 0], a=1.0, v=0.5)
+    sleep(1)
+    movel(p[0.5, -0.5, 0.2, 0, 0, 0], a=1.2, v=0.7)  
+end
+# Explanation:
+# 1. Corrected the movej command by adding parentheses around the pose and parameters.
+# 2. Corrected the move1 command by changing to movel and adding parentheses around the pose and parameters.
+# 3. Added missing end statement
+```"
+Write a URScript function that uses a variable for the target position. The position should be easily changed by a user.,"","```URscript
+def move_variable_position(target_pose):
+  movel(target_pose, a=1.0, v=0.5)
+end
+
+# Example Usage:
+# target_pose_1 = p[0.4, 0.2, 0.3, 0, 0, 0]
+# move_variable_position(target_pose_1)
+
+# target_pose_2 = p[0.6, 0.0, 0.4, 0, 0, 0]
+# move_variable_position(target_pose_2)
+```"
+You are given existing URScript code that uses hardcoded values in a loop. Refactor this code to use variables and a defined function to improve code readability and maintainability.,"```URscript
+def old_loop_motion():
+  for i in range(5):
+    movej(p[0.2, -0.4+ i*0.1, 0.3, 0, 0, 0], a=1.0, v=0.5)
+    sleep(0.5)
+  end
+end
+```","```URscript
+def move_to_position(x,y,z):
+  local waypoint = p[x,y,z,0,0,0]
+  movej(waypoint,a=1.0,v=0.5)
+  sleep(0.5)
+end
+
+def new_loop_motion():
+  start_y = -0.4
+  step = 0.1
+  num_steps= 5
+
+    for i in range(num_steps):
+    	move_to_position(0.2, start_y + i * step, 0.3)
+    end
+end
+```"
+Create a URScript function that simulates a pick-and-place sequence using a gripper. Assume the existence of `gripper_open()` and `gripper_close()` functions. Include necessary movements and delays.,"","```URscript
+def pick_and_place():
+    local pick_pose = p[0.2, -0.4, 0.1, 0, 0, 0]
+    local place_pose = p[0.4, -0.2, 0.1, 0, 0, 0]
+    local approach_z = 0.2
+  
+    # Approach pick position
+    movel(pose_add(pick_pose,p[0,0,approach_z,0,0,0]),a=1.0,v=0.5)
+    
+    # Move to pick position
+    movel(pick_pose,a=0.5,v=0.2)
+    
+    # Close the gripper
+    gripper_close()
+    sleep(1)
+  
+    # Move to approach pose before lift
+    movel(pose_add(pick_pose,p[0,0,approach_z,0,0,0]),a=0.5,v=0.4)
+    
+    # Move to the place position approach 
+    movel(pose_add(place_pose,p[0,0,approach_z,0,0,0]),a=1.0,v=0.5) 
+ 
+    # Move to place position
+    movel(place_pose,a=0.5,v=0.2)
+    
+    # Open the gripper
+    gripper_open()
+    sleep(1)
+
+    # Move to approach pose before going up
+    movel(pose_add(place_pose,p[0,0,approach_z,0,0,0]),a=0.5,v=0.4)
+end
+```"
+How would you implement a simple error handling mechanism to halt robot movement if a specific digital input goes high during execution? Provide a URScript implementation.,"","```URscript
+def error_handling_example():
+  local error_input_pin = 1 # Digital input pin to check for error.
+  local error_detected = False
+  
+  while not error_detected:
+
+  # Normal movement section
+    movej(p[0.3, -0.5, 0.4, 0, 0, 0], a=1.0, v=0.5)
+    sleep(1)
+    movel(p[0.5, -0.5, 0.4, 0, 0, 0], a=1.0, v=0.5)
+    
+    # Check for error input
+    if get_digital_in(error_input_pin):
+      error_detected = True
+      stopl()
+      textmsg(""Error detected! Robot stopped."", ""Error"", true)
+      popup(""Error"", title=""ERROR!!"", blocking=True)
+    end
+    
+  	sync()
+  end
+  
+  halt
+end
+```"
+"Generate URScript code that uses the `speedj` and `speedl` commands to move the robot with varying speeds. Move the joint between a two defined poses, and then move linearly between two poses, specifying speed changes during both movements.","","```URscript
+def speed_profile_movements():
+  local pose_1 = p[0.2, -0.4, 0.3, 0, 0, 0]
+  local pose_2 = p[0.4, -0.2, 0.3, 0, 0, 0]
+  local pose_3 = p[0.6, 0.0, 0.3, 0, 0, 0]
+  local pose_4 = p[0.5, 0.2, 0.3, 0, 0, 0]
+
+  # Joint movement with varying speeds
+ 
+  speedj([0.5,0.5,0.5,0.5,0.5,0.5], 0.5) #initial speed and acceleration
+  movej(pose_1, a=1.0, v=0.5)
+  speedj([1.0,1.0,1.0,1.0,1.0,1.0], 1.0) 
+  movej(pose_2, a=1.0, v=0.5)
+
+  # Cartesian movement with varying speed
+  speedl(0.2, 0.1)
+  movel(pose_3, a=1.0, v=0.2)
+  speedl(0.8, 0.2)
+  movel(pose_4, a=1.0, v=0.2)
+
+end
+
+```"
+Write URScript code that demonstrates the use of the `pose_add()` function by moving the robot in a specific direction relative to the initial position. Include a delay and a suitable acceleration and velocity.,"","```URscript
+def relative_movement_example():
+  local initial_pose = get_actual_tcp_pose()
+  local x_offset = 0.1
+  local y_offset = 0.2
+  local z_offset = 0.1
+  local relative_pose_offset = p[x_offset,y_offset,z_offset,0,0,0]
+
+  # Move relative to current position
+  local target_pose = pose_add(initial_pose, relative_pose_offset)
+  movel(target_pose, a=1.0, v=0.5)
+  sleep(1)
+
+  # Move back to initial position
+  movel(initial_pose, a=1.0, v=0.5)
+
+end
+```"
+"Given a URScript program with a potential issue in loop execution, debug and correct the code to ensure the loop iterates the desired number of times. Assume the `loop_variable` should increment by 1 each iteration.","```URscript
+def broken_loop():
+  loop_variable = 0
+  while (loop_variable < 5)
+     # Do something
+     movej(p[0.3,-0.5,0.4,0,0,0],a=1,v=1)
+  end
+end
+```","```URscript
+def corrected_loop():
+  loop_variable = 0
+  while (loop_variable < 5):
+    # Do something
+    movej(p[0.3,-0.5,0.4,0,0,0],a=1,v=1)
+    loop_variable = loop_variable + 1
+  end
+end
+
+#Changes made:
+# * Added a colon to the while loop line
+# * Added `loop_variable = loop_variable + 1`  to the inside of the loop so the variable increments
+```"
+Create a URScript function that uses the `get_actual_joint_positions()` function to move the robot to the specified joint coordinates. Then print them to the log window.,"```URscript
+target_joint_pos = [1.5, -1.5, 1, -1, 1, 0]
+```","```URscript
+def move_to_given_joint_and_log():
+  global target_joint_pos
+  log_message = ""Starting joint positions ""
+  joint_positions = get_actual_joint_positions()
+
+  textmsg(log_message,  ""Joint position information"",True)
+  textmsg(joint_positions[0],  ""Joint 1 position:"",True)
+  textmsg(joint_positions[1],  ""Joint 2 position:"",True)
+  textmsg(joint_positions[2],  ""Joint 3 position:"",True)
+  textmsg(joint_positions[3],  ""Joint 4 position:"",True)
+  textmsg(joint_positions[4],  ""Joint 5 position:"",True)
+  textmsg(joint_positions[5],  ""Joint 6 position:"",True)
+
+  movej(target_joint_pos, a = 1.0, v = 1)
+  sleep(1)
+  log_message = ""Ending joint positions ""
+  joint_positions = get_actual_joint_positions()
+
+  textmsg(log_message,  ""Joint position information"",True)
+  textmsg(joint_positions[0],  ""Joint 1 position:"",True)
+  textmsg(joint_positions[1],  ""Joint 2 position:"",True)
+  textmsg(joint_positions[2],  ""Joint 3 position:"",True)
+  textmsg(joint_positions[3],  ""Joint 4"
+Write a URScript function that makes the robot move to a series of given waypoints using the `movej` command. Assume that all waypoints are provided in joint space. How would you ensure a smooth blend between each of the successive movements?,"```
+waypoints = [[0.5, 0.2, -0.1, 0.0, 1.5, 0.7], [0.6, 0.1, -0.2, 0.1, 1.6, 0.8], [0.4, 0.3, 0.1, -0.2, 1.4, 0.6]]
+```","```URscript
+def move_through_waypoints(waypoints):
+  blend_radius = 0.04 # Adjust this for smoother transitions
+  q_prev = get_joint_positions()
+  for q_next in waypoints:
+    movej(q_next, a=0.5 ,v=1, r=blend_radius)
+    q_prev = q_next
+  end
+end
+```"
+"Implement a URScript function that reads data from a sensor (assume a variable `sensor_data` that emulates sensor output) and dynamically adjusts the robot's Z-axis position. If the sensor data is above a threshold, the robot moves up; else, it moves down. Include motion limits to avoid collisions. Consider `sensor_threshold = 50`.",```sensor_data=60```,"```URscript
+def adjust_z_based_on_sensor(sensor_threshold):
+  sensor_data = 60  # Assume sensor input - Replace with actual sensor read
+  current_pose = get_actual_tcp_pose()
+  
+  if sensor_data > sensor_threshold:
+    new_z = current_pose[2] + 0.05
+    if new_z <= 0.5:  # Check motion limit
+      target_pose = p[current_pose[0],current_pose[1], new_z, current_pose[3], current_pose[4], current_pose[5]]
+      movel(target_pose, a=0.3,v=0.2)
+    else:
+      textmsg(""Warning: Z-axis limit reached up."")
+  else:
+     new_z = current_pose[2] - 0.05
+     if new_z >= 0.1: # Check motion limit
+       target_pose = p[current_pose[0],current_pose[1], new_z, current_pose[3], current_pose[4], current_pose[5]]
+       movel(target_pose, a=0.3,v=0.2)
+     else:
+      textmsg(""Warning: Z-axis limit reached down."")
+end
+adjust_z_based_on_sensor(50)
+```"
+"Create a URScript snippet to implement error handling within a movej function. If the robot fails to reach the target position, log the failure and move to a safe recovery position and print an error message. Consider recovery position is predefined `safe_pos = p[0.0, 0.0, 0.2, 0.0, 0.0, 0.0]`.","","```URscript
+def move_with_error_handling():
+  safe_pos=p[0.0, 0.0, 0.2, 0.0, 0.0, 0.0]
+  target_pos = p[0.2, 0.2,0.2,0.5,0.2,0.9]
+  try:
+    movej(target_pos, a=0.5, v=1)
+  catch e:
+    textmsg(""Movej failed, attempting recovery"", e)
+    log_message(""Movej failed, attempting recovery."")
+    movel(safe_pos, a=0.3, v=0.2)
+  end
+end
+move_with_error_handling()
+```"
+"Given a series of tool offsets for a robotic task, write a URScript function that reads these offsets, applies them sequentially and moves the robot to a predefined `base_pose`. The tool offsets are `offsets = [p[0.01, 0, 0, 0, 0, 0], p[0, 0.02, 0, 0, 0, 0], p[0, 0, 0.02, 0, 0, 0] ]` and `base_pose = p[0.1, 0.1, 0.1, 0, 0, 0]`.","```
+offsets = [p[0.01, 0, 0, 0, 0, 0], p[0, 0.02, 0, 0, 0, 0], p[0, 0, 0.02, 0, 0, 0] ]
+base_pose = p[0.1, 0.1, 0.1, 0, 0, 0]
+```","```URscript
+def apply_tool_offsets(base_pose, offsets):
+  current_pose = base_pose
+  for offset in offsets:
+    current_pose = pose_trans(current_pose, offset)
+    movel(current_pose, a=0.3,v=0.2)
+  end
+  return current_pose
+end
+apply_tool_offsets(p[0.1, 0.1, 0.1, 0, 0, 0], [p[0.01, 0, 0, 0, 0, 0], p[0, 0.02, 0, 0, 0, 0], p[0, 0, 0.02, 0, 0, 0]])
+
+```"
+"Refactor the following URScript code to improve readability by using meaningful variable names and adding comments. The given code is : `def a(): p1=p[0.1,0.2,0.3,0,0,0];m1(p1,a=1,v=0.5);p2=p[0.2,0.3,0.4,0,0,0];m1(p2,a=1,v=0.5);end`.","```
+def a(): p1=p[0.1,0.2,0.3,0,0,0];m1(p1,a=1,v=0.5);p2=p[0.2,0.3,0.4,0,0,0];m1(p2,a=1,v=0.5);end
+```","```URscript
+def move_between_points():
+  # Define the first waypoint
+  first_waypoint = p[0.1, 0.2, 0.3, 0, 0, 0]
+  # Move to the first waypoint
+  movel(first_waypoint, a=1, v=0.5)
+  # Define the second waypoint
+  second_waypoint = p[0.2, 0.3, 0.4, 0, 0, 0]
+  # Move to the second waypoint
+  movel(second_waypoint, a=1, v=0.5)
+end
+```"
+"You are given a piece of URScript code which contains an infinite loop. Modify the code to include a conditional statement to break the loop using a variable `loop_counter`. The initial variable value is `0` and a `max_iterations` variable with the value `10`. Original code: `def run_loop(): while True: textmsg(""Looping""); end;end`.","```
+Initial code: def run_loop(): while True: textmsg(""Looping""); end;end
+```","```URscript
+def run_loop():
+  loop_counter = 0
+  max_iterations=10
+  while True:
+      textmsg(""Looping: "", loop_counter)
+      loop_counter = loop_counter + 1
+      if loop_counter >= max_iterations:
+       break
+      end
+  end
+end
+run_loop()
+```"
+"Create a URScript function that continuously monitors the robot’s TCP speed using the `speed()` function. If the speed exceeds a defined maximum limit, `max_speed = 0.7`, the script should print a warning message and attempt to reduce the speed by 20%.","","```URscript
+def monitor_speed():
+  max_speed = 0.7
+  while True:
+    current_speed = speed()
+    if current_speed > max_speed:
+      textmsg(""Warning: Current speed exceeds maximum limit: "", current_speed)
+      # Calculate reduced speed
+      reduced_speed = max_speed * 0.8 
+      set_speed_slider(reduced_speed)
+      textmsg(""Speed reduced to: "", reduced_speed)
+    end
+    sync()
+  end
+end
+monitor_speed()
+```"
+"Write a URScript function that calculates the Euclidean distance between two given TCP positions. The function should take two pose variables `pose1` and `pose2` as input and return the calculated distance. Assume `pose1 = p[0.1, 0.2, 0.3, 0, 0, 0]` and `pose2 =  p[0.2, 0.3, 0.4, 0, 0, 0]`.","```
+pose1 = p[0.1, 0.2, 0.3, 0, 0, 0]
+pose2 = p[0.2, 0.3, 0.4, 0, 0, 0]
+```","```URscript
+def calculate_distance(pose1, pose2):
+  x1 = pose1[0]
+  y1 = pose1[1]
+  z1 = pose1[2]
+  x2 = pose2[0]
+  y2 = pose2[1]
+  z2 = pose2[2]
+  distance = sqrt(pow((x2 - x1), 2) + pow((y2 - y1), 2) + pow((z2 - z1), 2))
+  return distance
+end
+
+pose1 = p[0.1, 0.2, 0.3, 0, 0, 0]
+pose2 = p[0.2, 0.3, 0.4, 0, 0, 0]
+
+result = calculate_distance(pose1 ,pose2)
+textmsg(""Distance:"", result)
+
+```"
+"Develop a URScript function to check if the robot's joint angles are within predefined limits. The function takes an array of joint angles `joint_angles` and arrays for `min_limits` and `max_limits`. If any joint exceeds its limits, the function must return `false`; otherwise, it returns `true`. Consider `joint_angles = [0.1, -0.2, 0.3, -0.4, 0.5, -0.6]`, `min_limits = [-1.0, -1.0, -1.0, -1.0, -1.0, -1.0]`, and `max_limits = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0]`.","```
+joint_angles = [0.1, -0.2, 0.3, -0.4, 0.5, -0.6]
+min_limits = [-1.0, -1.0, -1.0, -1.0, -1.0, -1.0]
+max_limits = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+```","```URscript
+def check_joint_limits(joint_angles, min_limits, max_limits):
+  for i = 0 to 5:
+    if (joint_angles[i] < min_limits[i]) or (joint_angles[i] > max_limits[i]):
+      return False
+    end
+  end
+  return True
+end
+
+joint_angles = [0.1, -0.2, 0.3, -0.4, 0.5, -0.6]
+min_limits = [-1.0, -1.0, -1.0, -1.0, -1.0, -1.0]
+max_limits = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0]"
+"Can you generate a URScript function that uses the `get_actual_tcp_pose()` function to retrieve the robot's current TCP position and then prints the X, Y, and Z coordinates to the robot's log?",<no_input>,"```URscript
+def print_tcp_coordinates():
+  local current_pose = get_actual_tcp_pose()
+  textmsg(""X coordinate: "", current_pose[0])
+    textmsg(""Y coordinate: "", current_pose[1])
+    textmsg(""Z coordinate: "", current_pose[2])
+end
+```"
+"Write a URScript program that defines a new custom variable called ""tool_offset"" as a pose representing an offset from the robot's TCP. The script should then move the robot to a pose calculated by adding the offset to an initial pose, with smooth blended motions.","```URscript
+  initial_pose = p[0.4, -0.2, 0.6, 0, 0, 0]
+```","```URscript
+  initial_pose = p[0.4, -0.2, 0.6, 0, 0, 0]
+  tool_offset = p[0.05, 0, 0.05, 0, 0, 0]
+  target_pose = pose_add(initial_pose, tool_offset)
+  movel(initial_pose, a=0.3, v=0.4)
+  movec(target_pose, initial_pose, a=0.3, v=0.4) # using movec to have smooth blending
+```"
+"Create a URScript snippet that reads the output of a digital input (DI0) on the robot. If the input is high, move the robot to position `p[0.2, 0.3, 0.5, 0, 0, 0]`, otherwise move the robot to `p[0.4, 0.3, 0.5, 0, 0, 0]`.",<no_input>,"```URscript
+  if (get_digital_in(0)):
+    movel(p[0.2, 0.3, 0.5, 0, 0, 0], a=0.3, v=0.4)
+  else:
+    movel(p[0.4, 0.3, 0.5, 0, 0, 0], a=0.3, v=0.4)
+  end
+```"
+"Develop a URScript function that takes a position in robot space as input and then smoothly moves the robot to that input position. Additionally, the function should check current tool speed (using `get_actual_tcp_speed()`) after movement, and if speed exceeds 0.1, output a warning message.","```URscript
+input_position = p[0.3, -0.4, 0.2, 0, 0, 0]
+```","```URscript
+def move_and_check_speed(target_pos):
+  movel(target_pos, a=0.5, v=0.5)
+  
+  local current_speed = get_actual_tcp_speed()
+  if (current_speed > 0.1):
+    textmsg(""Warning: Tool speed exceeded threshold after movement"")
+  end
+end
+
+input_position = p[0.3, -0.4, 0.2, 0, 0, 0]
+move_and_check_speed(input_position)
+```"
+"Given the following code snippet, refactor it to avoid using hardcoded values for the speed and acceleration, turning them into configurable variables. The new variables should be initialized at the program's beginning.","```URscript
+movel(p[0.1,0.2,0.3,0,0,0], a=0.5, v=0.5)
+movel(p[0.2,0.3,0.4,0,0,0], a=0.5, v=0.5)
+```","```URscript
+  local move_acceleration = 0.5
+  local move_velocity = 0.5
+  
+  movel(p[0.1,0.2,0.3,0,0,0], a=move_acceleration, v=move_velocity)
+  movel(p[0.2,0.3,0.4,0,0,0], a=move_acceleration, v=move_velocity)
+```"
+"Create a URScript program that reads an analog input from pin A0 (using `read_analog_in(0)`) and convert to voltage using `get_analog_in_voltage()` function; then, if the voltage is greater than 2.5V, move the robot to position `p[0.4, -0.5, 0.3, 0, 0, 0]`, otherwise move to position `p[0.6, -0.5, 0.3, 0, 0, 0]`.",<no_input>,"```URscript
+  local analog_value = read_analog_in(0)
+  local voltage = get_analog_in_voltage(analog_value)
+  if (voltage > 2.5):
+    movel(p[0.4, -0.5, 0.3, 0, 0, 0], a=0.3, v=0.4)
+  else:
+    movel(p[0.6, -0.5, 0.3, 0, 0, 0], a=0.3, v=0.4)
+  end
+```"
+"Given the URScript code, what is the most efficient way to move the robot sequentially through the points listed, making use of blending?","```URscript
+movel(p[0.1, 0.2, 0.3, 0, 0, 0], a=0.2, v=0.2)
+movel(p[0.2, 0.3, 0.4, 0, 0, 0], a=0.2, v=0.2)
+movel(p[0.3, 0.4, 0.5, 0, 0, 0], a=0.2, v=0.2)
+```","```URscript
+movej(p[0.1, 0.2, 0.3, 0, 0, 0], a=0.2, v=0.2)
+movec(p[0.2, 0.3, 0.4, 0, 0, 0], p[0.1, 0.2, 0.3, 0, 0, 0], a=0.2, v=0.2 )
+movec(p[0.3, 0.4, 0.5, 0, 0, 0], p[0.2, 0.3, 0.4, 0, 0, 0], a=0.2, v=0.2)
+```"
+"Create a URScript program that simulates a pick-and-place operation. Use two positions, `pick_pos` and `place_pos`, and include sleep functions in the program to simulate gripping and releasing actions.","```URscript
+pick_pos = p[0.3, -0.2, 0.1, 0, 0, 0]
+place_pos = p[0.6, -0.2, 0.1, 0, 0, 0]
+```","```URscript
+pick_pos = p[0.3, -0.2, 0.1, 0, 0, 0]
+place_pos = p[0.6, -0.2, 0.1, 0, 0, 0]
+
+movel(pick_pos, a=0.3, v=0.4)
+sleep(1) # Simulate gripping
+movel(place_pos, a=0.3, v=0.4)
+sleep(1) # Simulate releasing
+```"
+"Write a URScript function named `move_to_point` that accepts a pose as an argument and moves the robot to that pose. Also, at the end of the function, increment a global variable named move_count that is initialized at the program start.",<no_input>,"```URscript
+global move_count = 0
+
+def move_to_point(target_pose):
+    movel(target_pose, a=0.4, v=0.5)
+    global move_count = move_count + 1
+end
+```"
+"Generate URScript to create a function `safe_linear_move` to move the robot in a straight line to given pose; the function should check if any robot joint exceed 90 degrees before doing the move. If any joint is over 90 degrees, it should issue a  warning in the robot log before moving.","```URscript
+target_pose = p[0.4, 0.3, 0.5, 0, 0, 0]
+```","```URscript
+def safe_linear_move(target_pose):
+  local joint_angles = get_actual_joint_positions()
+  for i = 0 to 5:
+    if (abs(joint_angles[i]) > 1.5708): # 90 degrees in radians
+      textmsg(""Warning: Joint "", i, "" exceeds 90 degrees before move"")
+    end
+  end
+  movel(target_pose, a=0.4, v=0.5)
+end
+
+target_pose = p[0.4, 0.3, 0.5, 0, 0, 0]
+safe_linear_move(target_pose)
+```"
+How can we integrate a simple loop in URScript to repeat a move 10 times with a delay of 0.5 seconds between each iteration? The target position is provided.,"```URscript
+target_position = p[0.5, 0.2, 0.4, 0, 0, 0]
+```","```URscript
+target_position = p[0.5, 0.2, 0.4, 0, 0, 0]
+
+for i = 1 to 10:
+  movel(target_position, a=0.4, v=0.5)
+  sleep(0.5)
+end
+```"
+"Given a pose `start_pose` and a rotation offset, write a URScript that applies rotation offset around the Z-axis and move the robot to new calculated pose.","```URscript
+start_pose = p[0.4, 0.2, 0.3, 0, 0, 0];
+rotation_offset = rpy_to_rotvec([0, 0, 1.57]);
+```","```URscript
+start_pose"
+"The URScript program below has an error wherein it executes a motion command before setting the acceleration and velocity. Correct it, so the program sets the acceleration and velocity parameters before the move command.","```URscript
+def incorrect_move():
+  movel(p[0.1, 0.2, 0.3, 0, 0, 0])
+  a = 0.5
+  v = 0.2
+end
+```","```URscript
+def correct_move():
+  a = 0.5
+  v = 0.2
+  movel(p[0.1, 0.2, 0.3, 0, 0, 0], a=a, v=v)
+end
+```"
+"Given the following URScript snippet, create an inverse function ""calculate_pose_offset_inverse"" that takes in the current pose and the transformed pose and returns the offset.","```URscript
+def calculate_pose_offset(current_pose, transformed_pose):
+  offset = pose_trans(pose_inv(current_pose), transformed_pose)
+  return offset
+end
+```","```URscript
+def calculate_pose_offset_inverse(current_pose, transformed_pose):
+  offset = pose_trans(transformed_pose, pose_inv(current_pose))
+  return offset
+end
+```"
+"Create a URScript function named `safe_move_to` that moves to a target pose, checks the robot’s safety status, and if a safety stop is detected, prints a message to the console and immediately stops the program using the ""quit"" command.","","```URscript
+def safe_move_to(target_pose):
+  movel(target_pose, a=1.2, v=0.25)
+  if(get_safety_mode() != 1):
+    textmsg(""Safety stop detected, stopping program!"")
+    quit()
+  end
+end
+```"
+Refactor the given URScript code to use a `for` loop instead of a `while` loop to perform a repetitive motion task 5 times. Maintain all other parameters for the motion.,"```URscript
+def repetitive_motion():
+  i = 0
+  while i < 5:
+    movel(p[0.4, 0.3, 0.2, 0, 0, 0], a=0.5, v=0.2)
+    sleep(0.5)
+    i = i + 1
+  end
+end
+```","```URscript
+def repetitive_motion_refactored():
+  for i in range(5):
+    movel(p[0.4, 0.3, 0.2, 0, 0, 0], a=0.5, v=0.2)
+    sleep(0.5)
+  end
+end
+```"
+"How would you write a URScript function that moves the robot to a location above a table, and then uses a relative move to go down to the table surface based on user input for the downward move distance? This distance should be less than 0.1 m.","","```URscript
+def move_to_table(downward_move):
+  table_approach_pose = p[0.4, 0.3, 0.5, 0, 0, 0]
+  if downward_move<0.1:
+    movel(table_approach_pose, a=0.2, v=0.5)
+    movej(pose_add(get_actual_tcp_pose(),p[0,0,-downward_move,0,0,0]), a=0.2, v=0.5)
+  else:
+    textmsg(""Downward move is too large. Please provide a value less than 0.1"")
+  end
+end
+```"
+"Optimize the provided URScript code, specifically reducing code lines while maintaining the same functionality. The goal is to move to three predefined poses sequentially with the same acceleration and velocity using a loop.","```URscript
+def move_to_multiple_poses():
+  pose_1 = p[0.1, 0.1, 0.1, 0, 0, 0]
+  pose_2 = p[0.2, 0.2, 0.2, 0, 0, 0]
+  pose_3 = p[0.3, 0.3, 0.3, 0, 0, 0]
+  a = 0.3
+  v = 0.6
+  movel(pose_1, a=a, v=v)
+  movel(pose_2, a=a, v=v)
+  movel(pose_3, a=a, v=v)
+end
+```","```URscript
+def move_to_multiple_poses_optimized():
+  poses = [p[0.1, 0.1, 0.1, 0, 0, 0], p[0.2, 0.2, 0.2, 0, 0, 0], p[0.3, 0.3, 0.3, 0, 0, 0]]
+  a = 0.3
+  v = 0.6
+  for pose in poses:
+    movel(pose, a=a, v=v)
+  end
+end
+```"
+"Write a URScript function that implements a try-catch block to handle possible errors when moving the robot to a specific joint position. If the move fails, print the error message to the console using the `textmsg` function with the relevant reason of failure.","","```URscript
+def safe_joint_move(target_joint_position):
+  try:
+    movej(target_joint_position, a=0.2, v=0.5)
+  catch move_error:
+    textmsg(""Error moving to joint position: "", move_error)
+  end
+end
+```"
+Given a list of waypoints create a URScript function that moves the robot through them in a circular path (looping back to the first waypoint) with smooth blending at the corners. Include appropriate default accelerations and velocities.,"```URscript
+waypoints = [p[0.1, 0.1, 0.1, 0, 0, 0], p[0.2, 0.2, 0.2, 0, 0, 0], p[0.3, 0.1, 0.1, 0, 0, 0]]
+```","```URscript
+def move_circular_path(waypoints):
+  a = 0.3
+  v = 0.6
+  r = 0.02
+  while True:
+    for waypoint in waypoints:
+      movep(waypoint, a=a, v=v, r=r)
+    end
+  end
+end
+```"
+"Create a URScript program that continuously monitors the digital input signal from pin 0. When the input is high, print “Input high” to the console; when low print and print “Input low” to the console.","","```URscript
+def monitor_digital_input():
+  while True:
+      if read_digital_in(0):
+          textmsg(""Input high"")
+      else:
+          textmsg(""Input low"")
+      end
+      sleep(0.1)
+  end
+end
+```"
+"Modify a given URScript function to now also include logic that sets the tool digital output pin 0 high when nearing the final waypoint, before executing a move to the final waypoint and setting the digital output low after the move. The final waypoint is the last element of the waypoints list.","```URscript
+def move_through_waypoints(waypoints):
+  for waypoint in waypoints:
+    movel(waypoint,a=0.4, v=0.2)
+  end
+end
+```","```URscript
+def move_through_waypoints_with_output(waypoints):
+  for i = 0 to len(waypoints)-2:
+    movel(waypoints[i], a=0.4, v=0.2)
+  end
+  set_tool_digital_out(0, True)
+  movel(waypoints[len(waypoints)-1], a=0.4, v=0.2)
+  set_tool_digital_out(0, False)
+end
+```"
+Develop a URScript module that uses the `thread` functionality to simultaneously control two outputs and the robot's motion. One thread should toggle a digital output and the other thread should move the robot to the provided waypoints.,"```URscript
+waypoints = [p[0.4, 0.4, 0.4, 0, 0, 0], p[0.5, 0.5, 0.5, 0, 0, 0]]
+```","```URscript
+def output_and_motion_control(waypoints):
+  thread output_control():
+    while True:
+      set_tool_digital_out(0, True)
+      sleep(1)
+      set_tool_digital_out(0, False)
+      sleep(1)
+    end
+  end
+  thread motion_control():
+    for waypoint in waypoints:
+       movel(waypoint, a=0.2, v=0.5)
+    end
+  end
+  sync()
+end
+```"
+"Debug the provided URScript code and fix any potential errors that might cause unexpected behavior. Note that the intention is move the robot to p[0,0,0.3,0,0,0] with speed of v=0.4 and acceleration a=0.1 after moving to home pose.","```URscript
+def move_with_error():
+  movej(get_actual_joint_positions(), a=1, v=1)
+  movej(p[0,0,0.3,0,0,0] v = 0.4, a=0.1)
+end
+```","```URscript
+def move_without_error():
+  movej(get_actual_joint_positions(), a=1, v=1)
+  movej(p[0,0,0.3,0,0,0], a=0.1, v=0.4 )
+end
+```"
+"Write a URScript function named `gripper_control` that simulates a simple gripper action; output 0 controls closing the gripper, and output 1 controls opening the gripper. The closing function needs to wait for 2 seconds.","","```URscript
+def gripper_control(action):
+  if action == 0:
+    set_tool_digital_out(1, False) # Close Gripper
+    sleep(2)
+  elif action ==1:
+    set_tool_digital_out(1, True) # Open Gripper
+  else:
+    textmsg(""Invalid action, use 0 for close, 1 for open"")
+  end
+end
+```"
+"Generate URScript code that defines a function called `scale_pose` that takes pose ‘p’ and scaling factors ‘sx’, ‘sy’, ‘sz’ as input parameters, and generates a new scaled pose. The rotation component shouldn't be altered within the function.","","```URscript
+def scale_pose(p, sx, sy, sz):
+  new_x = p[0] * sx
+  new_y = p[1] * sy
+  new_z = p[2] * sz
+  return p[new_x, new_y, new_z, p[3], p[4], p[5]]
+end
+```"
+How would you modify the given URScript code to implement a function that sets tool TCP based on user input and validates it by checking the output of the get_tcp_offset() command?,"```URscript
+def set_tool_tcp():
+    local tool_offset_pose = p[0.1, 0.0, 0.1, 0.0, 0.0, 0.0]
+    set_tcp(tool_offset_pose)
+end
+```","```URscript
+def set_tool_tcp():
+    local tool_offset_pose = p[0.1, 0.0, 0.1, 0.0, 0.0, 0.0]
+    set_tcp(tool_offset_pose)
+
+    #Validate through get_tcp_offset 
+    local validated_offset = get_tcp_offset()
+    if (validated_offset == tool_offset_pose):
+        textmsg(""Tool TCP set and validated!"")
+    else:
+        textmsg(""Error: Tool TCP validation failed."")
+    end
+end
+```"
+"Implement a URScript program to define a series of waypoints, then move through them using the movep command with smoothing and check to make sure the robot moves a small amount after the move .",<no_input>,"```URscript
+def move_through_waypoints():
+  local waypoint1 = p[0.2, -0.4, 0.2, 0.0, 0.0, 0.0]
+  local waypoint2 = p[0.0, -0.6, 0.3, 0.0, 0.0, 0.0]
+  local waypoint3 = p[-0.2, -0.4, 0.2, 0.0, 0.0, 0.0]
+  local initial_pos = get_actual_tcp_pose()
+  
+  movep(waypoint1, a=0.5, v=0.3, r=0.02)
+  local current_pos_1 = get_actual_tcp_pose()
+  if norm(current_pos_1 - initial_pos) > 0.001:
+    textmsg(""Moved after the first movep!"")
+  end  
+  movep(waypoint2, a=0.5, v=0.3, r=0.02)
+    local current_pos_2 = get_actual_tcp_pose()
+  if norm(current_pos_2 - current_pos_1) > 0.001:
+    textmsg(""Moved after the second movep!"")
+  end  
+  movep(waypoint3, a=0.5, v=0.3, r=0.02)
+    local current_pos_3 = get_actual_tcp_pose()
+  if norm(current_pos_3 - current_pos_2) > 0.001:
+    textmsg(""Moved after the third movep!"")
+  end  
+end
+```"
+"Create a URScript program that reads the force torque sensor values, and if the force along the Z-axis is higher than a certain limit, it will trigger a stop condition and output a log message.",<no_input>,"```URscript
+def force_monitoring():
+  local force_limit ="
+"Create a URScript function that enables and disables a digital output based on boolean input, specifically setting output 5 high if the input is true, and low otherwise.","","```urscript
+def set_digital_output(enable):
+  if(enable == True):
+    set_digital_out(5, True)
+  else:
+    set_digital_out(5, False)
+  end
+end
+```"
+"Implement error handling within the given URScript code. If the robot encounters an error during the move command, display an error message ""Motion Error!"".","```urscript
+def move_with_error():
+    local target_pose = p[0.6, -0.1, 0.4, 0, 0, 0]
+    movel(target_pose, a=0.4, v=0.7)
+end
+```","```urscript
+def move_with_error():
+    local target_pose = p[0.6, -0.1, 0.4, 0, 0, 0]
+    try:
+        movel(target_pose, a=0.4, v=0.7)
+    catch err:
+        textmsg(""Motion Error!"")
+    end
+end
+```"
+"Given a URScript function with a hardcoded speed value, create two new functions. The first new function should use the current robot speed and the second should use a speed input parameter for the linear motions","```urscript
+def move_with_speed():
+  local target_pose = p[0.3, -0.4, 0.2, 0, 0, 0]
+  movel(target_pose, a=0.2, v=0.5)
+end
+```","```urscript
+def move_with_current_speed():
+  local target_pose = p[0.3, -0.4, 0.2, 0, 0, 0]
+  local current_speed = get_tcp_speed()
+  movel(target_pose, a=0.2, v=current_speed)
+end
+
+def move_with_input_speed(speed):
+    local target_pose = p[0.3, -0.4, 0.2, 0, 0, 0]
+    movel(target_pose, a=0.2, v=speed)
+end
+```"
+Write a URScript script that reads the current TCP position and prints it to the log.,"","```urscript
+def print_tcp_position():
+    local current_tcp_position = get_actual_tcp_pose()
+    textmsg(""Current TCP Position: "", current_tcp_position)
+end
+```"
+"Refactor the provided URScript code to use a named constant instead of directly using magic numbers for acceleration and velocity. Define a CONSTANT for ""accel"" equal to 0.3 and another constant called ""velo"" equal to 0.6 before the main function.","```urscript
+def move_refactor():
+  local init_pose = p[0.2, -0.5, 0.3, 0, 0, 0]
+  local target_pose = p[0.5, -0.3, 0.4, 0, 0, 0]
+  movel(init_pose, a=0.1, v=0.2)
+  movel(target_pose, a=0.1, v=0.2)
+end
+```","```urscript
+CONSTANT accel=0.3
+CONSTANT velo = 0.6
+
+def move_refactor():
+  local init_pose = p[0.2, -0.5, 0.3, 0, 0, 0]
+  local target_pose = p[0.5, -0.3, 0.4, 0, 0, 0]
+  movel(init_pose, a=accel, v=velo)
+  movel(target_pose, a=accel, v=velo)
+end
+```"
+"How would you create a loop in URScript that moves the robot back and forth between two pre-defined positions three times, while recording execution start time?","```URscript
+global pose_0 = p[0.1, -0.4, 0.2, 0, 0, 0]
+global pose_1 = p[0.3, -0.6, 0.4, 0, 0, 0]
+```","```urscript
+global pose_0 = p[0.1, -0.4, 0.2, 0, 0, 0]
+global pose_1 = p[0.3, -0.6, 0.4, 0, 0, 0]
+
+def back_and_forth():
+  local start_time = get_standard_time()
+  for i = 1 to 3:
+    movel(pose_0, a=0.2, v=0.5)
+    movel(pose_1, a=0.2, v=0.5)
+  end
+end
+```"
+Can you develop a URScript function that takes a pose target as an argument and moves the robot there in joint space safely?,"","```urscript
+def move_to_target(target_pose):
+    movej(get_inverse_kin(target_pose, qnear=get_actual_joint_positions()), a=0.5, v=1)
+end
+```"
+Correct the syntax error in the URScript code snippet. The error is an invalid assignment.,"```urscript
+def error_syntax():
+    local position := p[0.2, -0.6, 0.5, 0, 0, 0]
+    movel(position, a=0.2, v=0.4)
+end
+```","```urscript
+def error_syntax():
+    local position = p[0.2, -0.6, 0.5, 0, 0, 0]
+    movel(position, a=0.2, v=0.4)
+end
+```"
+Optimize the provided URScript code snippet to reduce redundancy. The script currently sets the same acceleration and velocity for consecutive movements.,"```urscript
+def redundant_move():
+  local pose_a = p[0.1, -0.2, 0.3, 0, 0, 0]
+  local pose_b = p[0.4, -0.5, 0.6, 0, 0, 0]
+  movel(pose_a, a=0.3, v=0.6)
+  movel(pose_b, a=0.3, v=0.6)
+end
+```","```urscript
+def redundant_move():
+  local pose_a = p[0.1, -0.2, 0.3, 0, 0, 0]
+  local pose_b = p[0.4, -0.5, 0.6, 0, 0, 0]
+  local a = 0.3
+  local v = 0.6
+  movel(pose_a, a=a, v=v)
+  movel(pose_b, a=a, v=v)
+end
+```"
+"Generate a URScript program that blends two linear motions smoothly, using a blend radius of 0.05.","```urscript
+def unblended_moves():
+  local pose_1 = p[0.2, -0.4, 0.3, 0, 0, 0]
+  local pose_2 = p[0.3, -0.5, 0.4, 0, 0, 0]
+  local pose_3 = p[0.4, -0.4, 0.3, 0, 0, 0]
+  movel(pose_1, a=0.2, v=0.5)
+  movel(pose_2, a=0.2, v=0.5)
+  movel(pose_3, a=0.2, v=0.5)
+end
+```","```urscript
+def blended_moves():
+  local pose_1 = p[0.2, -0.4, 0.3, 0, 0, 0]
+  local pose_2 = p[0.3, -0.5, 0.4, 0, 0, 0]
+  local pose_3 = p[0.4, -0.4, 0.3, 0, 0, 0]
+  movel(pose_1, a=0.2, v=0.5)
+  moveb(pose_2, a=0.2, v=0.5, r=0.05)
+  movel(pose_3, a=0.2, v=0.5)
+end
+```"
+"Can you write a URScript program which calculates the distance between the current TCP pose and a target pose. Print this distance in meters. Pose input as 'p[0.5, -0.6, 0.7, 0, 0, 0]'.","`p[0.5, -0.6, 0.7, 0, 0, 0]`","```urscript
+def calculate_distance(target_pose):
+    local current_pose = get_actual_tcp_pose()
+    local distance = norm(target_pose - current_pose)
+    textmsg(""Distance in meters : "", distance)
+end
+
+global target_pose = p[0.5, -0.6, 0.7, 0, 0, 0]
+
+calculate_distance(target_pose)
+```"
+"Generate an example URScript program that demonstrates how to use the `socket_open` and `socket_send_string` commands to send a string ""Hello, robot!"" to a server on IP address ""192.168.1.100"" and port 30002. Close the socket afterward.","","```urscript
+def send_message():
+    local socket_id = socket_open(""192.168.1.100"", 30002)
+    if (socket_id >= 0):
+        socket_send_string(""Hello, robot!"", socket_id)
+        socket_close(socket_id)
+    else:
+       textmsg(""Error opening socket"")
+    end
+end
+```"
+Create a URScript function that takes a joint position in the form of a list as input and moves the robot to that position using movej while considering singularities.,"","```urscript
+def move_to_joint(joint_target):
+  movej(joint_target, a=0.5, v=1.0, t=0, r=0)
+end
+```"
+Debug the provided URScript code. The robot moves to a wrong position. The issue must be fixed by calculating the inverse kinemetics.,"```urscript
+def debug_issue():
+  local target_pose = p[0.4, -0.3, 0.5, 0, 0, 0]
+  movej(target_pose, a=0.2, v=0.4)
+end
+```","```urscript
+def debug_issue():
+  local target_pose = p[0.4, -0.3, 0.5, 0, 0, 0]
+  movej"
+"I want to create a URScript function that detects if there's a force exceeding 5N in the z-direction of the TCP. If so, it should stop the robot and output an error message. Write the function for me.","","```URscript
+def force_detection():
+  while True:
+    force_vector = get_tcp_force()
+    force_z = force_vector[2]
+    if force_z > 5:
+      popup(""Force exceeding 5N in Z direction detected! Robot stopped."", ""Force Error"", error=True)
+      stopl(1)
+      break
+    sync() # Ensure force reading is refreshed
+    sleep(0.1) # Small delay for efficiency
+  end
+end
+```"
+Refactor the following URScript code to be more readable and efficient. Focus on using meaningful variable names and reducing redundancy by creating a subprogram.,"```URscript
+def move_robot_redundant():
+  movel(p[0.1,0.1,0.1,0,0,0], a=1, v=0.5)
+  sleep(1)
+  movel(p[0.2,0.2,0.2,0,0,0], a=1, v=0.5)
+  sleep(1)
+  movel(p[0.3,0.3,0.3,0,0,0], a=1, v=0.5)
+  sleep(1)
+  movel(p[0.1,0.1,0.1,0,0,0], a=1, v=0.5)
+  sleep(1)
+end
+```","```URscript
+def move_to_pose(target_pose):
+  movel(target_pose, a=1, v=0.5)
+  sleep(1)
+
+def move_robot_refactored():
+  pose1 = p[0.1,0.1,0.1,0,0,0]
+  pose2 = p[0.2,0.2,0.2,0,0,0]
+  pose3 = p[0.3,0.3,0.3,0,0,0]
+
+  move_to_pose(pose1)
+  move_to_pose(pose2)
+  move_to_pose(pose3)
+  move_to_pose(pose1)
+end
+```"
+"Write a URScript program that reads data from a TCP socket and sends a robot to a pose which is defined in the received message. Assume the socket IP is ""192.168.1.100"" and port is 30002. The received message is a string formatted as ""x,y,z,rx,ry,rz"" where x,y,z are coordinates and rx,ry,rz are rotation angles.","","```URscript
+def socket_control():
+  # Socket Setup
+  socket_ip = ""192.168.1.100""
+  socket_port = 30002
+  socket_id = socket_open(socket_ip, socket_port)
+
+  if socket_id >= 0:
+    while True:
+      # Receive data
+      data = socket_read_string(socket_id)
+      
+      if data != """":
+           data_list = str_split(data, "","")
+           if length(data_list) == 6:
+              x = to_num(data_list[0])
+              y = to_num(data_list[1])
+              z = to_num(data_list[2])
+              rx = to_num(data_list[3])
+              ry = to_num(data_list[4])
+              rz = to_num(data_list[5])
+              
+              target_pose = p[x, y, z, rx, ry, rz]
+              movej(target_pose, a=1, v=0.5 ) # Use movej for faster pose updates
+	      sync()
+	   else:
+	       popup(""Invalid data received by socket: check formatting"", ""Socket Error"", error=True)
+	       break
+
+    socket_close(socket_id)
+  else:
+    popup(""Failed to open socket connection."", ""Socket Error"", error=True)
+
+end
+```"
+I have a URScript program which needs to handle multiple robot movements. How can I use threads to execute these movements concurrently? Provide a URScript example with comments.,"","```URscript
+def move_threaded():
+
+  # Define some movement functions
+  def move_routine_1():
+    movel(p[0.2, 0.2, 0.1, 0, 0, 0], a = 1, v=0.5)
+    sleep(2)
+    movel(p[0.3, 0.3, 0.2, 0, 0, 0], a = 1 , v=0.5)
+  end
+
+  def move_routine_2():
+    movej(p[0.4, -0.2, 0.1, 0, 0, 0], a =1 , v=0.5)
+    sleep(2)
+    movej(p[0.5, -0.3, 0.2, 0, 0, 0], a = 1,v=0.5)
+  end
+
+  # Create thread IDs
+  thread_1_id = run move_routine_1()
+  thread_2_id = run move_routine_2()
+
+  # Ensure the main program also waits for the threads to complete before exiting
+  sync_threads([thread_1_id, thread_2_id])
+end
+```"
+"Can you write a URScript function that moves the robot to a randomly generated position within a defined workspace? The workspace boundaries are x = [0.2, 0.6], y = [-0.4,0.0], and z = [0.1, 0.3].","","```URscript
+def random_position_move():
+    min_x = 0.2
+    max_x = 0.6
+    min_y = -0.4
+    max_y = 0.0
+    min_z = 0.1
+    max_z = 0.3
+    
+    rand_x =  min_x + random()*(max_x-min_x)
+    rand_y =  min_y + random()*(max_y-min_y)
+    rand_z = min_z + random()*(max_z-min_z)
+    
+    rand_pose = p[rand_x, rand_y, rand_z, 0, 0, 0]
+    movel(rand_pose, a=1, v=0.5)
+end
+```"
+Implement a URScript program that uses the built-in `teach_mode()` and `end_teach_mode()` functions to record robot positions and demonstrate a simple pick and place routine. The robot should move through the taught waypoints sequentially.,"","```URscript
+def teach_and_execute_pick_place():
+  # Initialize an empty list to store waypoints
+  waypoints = []
+
+  # First, enter teach mode for recording the waypoints
+  popup(""Enter Teach Mode and record the start pose. Press OK to continue."", ""Teach Mode"", warning = False)
+  teach_mode()
+  popup(""Press OK when start pose has been recorded"", ""Teach Mode"", warning = False)
+  waypoints = waypoints + [get_actual_tcp_pose()] #Add start pose
+  
+  popup(""Enter Teach Mode and record the pick pose. Press OK to continue."", ""Teach Mode"", warning = False)
+  teach_mode()
+  popup(""Press OK when pick pose has been recorded"", ""Teach Mode"", warning = False)
+  waypoints = waypoints + [get_actual_tcp_pose()] #Add pick pose
+
+  popup(""Enter Teach Mode and record the place pose. Press OK to continue."", ""Teach Mode"", warning = False)
+  teach_mode()
+  popup(""Press OK when place pose has been recorded"", ""Teach Mode"", warning = False)
+  waypoints = waypoints + [get_actual_tcp_pose()] #Add place pose
+    
+  end_teach_mode()
+    
+    
+  # Execute the pick and place routine using recorded waypoints
+  if length(waypoints) == 3:
+    movel(waypoints[0], a=1, v=0.5) # Go to start pose
+    movel(waypoints[1], a=1, v=0.5)  # Go to pick pose
+    set_digital_out(0, True) #Pick
+    sleep(1)
+    movel(waypoints[2], a=1, v=0.5) # Go to place pose
+    set_digital_out(0, False) #Place
+  else:
+    popup(""Not enough waypoints recorded. Please run again."", ""Error"", error = True)
+  end
+end
+```"
+I'm trying to use the `get_joint_positions()` function to read the robot's joint angles. How do I convert these readings from radians to degrees? Can you provide a concise code snippet performing this conversion?,"","```URscript
+def convert_radians_to_degrees():
+  joint_angles_rad = get_joint_positions()
+  
+  joint_angles_deg = []
+  for angle in joint_angles_rad:
+    joint_angles_deg += [rad2deg(angle)]
+  
+  return joint_angles_deg
+end
+```"
+"Given this URScript code snippet: `global my_variable = 10`, explain what the 'global' keyword means and how it affects the scope and accessibility of `my_variable`.","","In URScript, the `global` keyword declares a variable as existing in the global scope. This means:
+
+1. **Scope:** The variable declared as global exists outside any specific function or subroutine. This makes it accessible from any part of the program, including inside functions.
+
+2. **Accessibility:** Unlike local variables, declared within a function (which are only accessible inside that function), a global variable can be accessed and modified by any part of the script.
+
+3. **Lifetime:** Global variables are initialized and remain accessible throughout the execution of the script, making them suitable for storing program-wide data or constants.
+
+4. **Implications:** While making data globally available, use of global variables can make program harder to understand or debug: when a bug is encountered its origin could lie in any part of the script. Global variables affect the state more broadly than local variables and can hide implicit program behaviours.
+
+In summary"
+"Write URScript code that reads the current robot joint positions and prints them to the console, including the joint names, in a formatted output string. Can you include a delay before and after the print statement.","","```URscript
+def print_joint_positions():
+  textmsg(""Current joint positions:"")
+  sleep(0.5)
+  j_names = [""Base"",""Shoulder"",""Elbow"",""Wrist1"",""Wrist2"",""Wrist3""]
+  j_values = get_joint_positions()
+  for i=0 to 5:
+    textmsg("" "",j_names[i],"": "", j_values[i])
+  end
+  sleep(1)
+end
+```"
+How would you implement error handling in URScript to detect if a joint exceeds its defined limits during a movej operation? Use a try-catch block to demonstrate the error handling.,"","```URscript
+def movej_with_error_handling():
+  try:
+    movej(j[10, 10, 10, 10, 10, 10], a=1.0, v=0.5) # Intentionally exceeding joint limits
+  catch e:
+    textmsg(""Error: Joint limit exceeded. Error message:"", e)
+  end
+end
+```"
+"Refactor the following URScript function to use named constants instead of hardcoded numerical values for acceleration and velocity; Also, make it a modular function and reduce code duplication.","```
+def move_linear_hardcoded():
+    movel(p[0.3, 0.2, 0.1, 0, 0, 0], a=1.2, v=0.2)
+    movel(p[0.4, 0.3, 0.2, 0, 0, 0], a=1.2, v=0.2)
+    movel(p[0.5, 0.4, 0.3, 0, 0, 0], a=1.2, v=0.2)
+end
+```","```URscript
+ACCELERATION = 1.2
+VELOCITY = 0.2
+
+def move_to_pose(target_pose):
+  movel(target_pose, a=ACCELERATION, v=VELOCITY)
+end
+
+def move_linear_refactored():
+    move_to_pose(p[0.3, 0.2, 0.1, 0, 0, 0])
+    move_to_pose(p[0.4, 0.3, 0.2, 0, 0, 0])
+    move_to_pose(p[0.5, 0.4, 0.3, 0, 0, 0])
+end
+```"
+"Create an example URScript program that reads digital input from pin 0 and, based on its state, moves the robot to either position A or position B. Include comments to explain your logic clearly.","","```URscript
+def move_based_on_input():
+  # Define target positions
+  pos_A = p[0.2, 0.1, 0.3, 0, 0, 0]
+  pos_B = p[0.4, 0.3, 0.1, 0, 0, 0]
+
+  # Read digital input from pin 0
+  input_state = read_digital_in(0)
+
+  # Conditional move based on input state
+  if input_state == True: # If input is high
+    movel(pos_A, a=1.0, v=0.5)  # Move to position A
+  else: # if input is low
+    movel(pos_B, a=1.0, v=0.5) # Move to position B
+
+end
+```"
+"Develop a URScript function that utilizes a for-loop to move the robot through a series of positions stored in a list with specified acceleration, velocity and time parameters.","```
+positions = [p[0.2, 0.1, 0.3, 0, 0, 0], p[0.4, 0.3, 0.1, 0, 0, 0], p[0.3,0.4,0.2,0,0,0]]
+```","```URscript
+def move_through_positions():
+  positions = [p[0.2, 0.1, 0.3, 0, 0, 0], p[0.4, 0.3, 0.1, 0, 0, 0], p[0.3,0.4,0.2,0,0,0]]
+  for i = 0 to (get_length(positions)-1):
+    movel(positions[i], a=1.0, v=0.5, t=1)
+  end
+end
+```"
+Write a URScript program that calculates the distance between two poses and outputs it to the console. Use `pose_dist` for calculation.,"```
+pose1 = p[0.1,0.2,0.3,0,0,0]
+pose2 = p[0.4,0.5,0.6,0,0,0]
+```","```URscript
+def calculate_distance():
+    pose1 = p[0.1,0.2,0.3,0,0,0]
+    pose2 = p[0.4,0.5,0.6,0,0,0]
+    distance = pose_dist(pose1, pose2)
+    textmsg(""Distance between poses: "", distance)
+end
+```"
+"Can you create a URScript script that checks the value of an analog input and moves a robot in a linear motion along the X-axis by 0.1m for every 1 volt of analog input, ensuring the movement is clamped within reasonable bounds (+-0.5m, from a point of origin of (0.1,0,0,0,0,0)? Also, include error handling for when the input value is outside of the expected range.","","```URscript
+def move_based_on_analog():
+  origin_pose = p[0.1, 0, 0, 0, 0, 0]
+  analog_input = read_analog_in(0)
+  if analog_input<0 or analog_input>5:
+    textmsg(""Error: Analog input out of range (0-5V): "", analog_input)
+    return
+  end
+  move_dist = analog_input * 0.1  # 0.1m per volt
+  if move_dist > 0.5:
+    move_dist = 0.5
+  elif move_dist < -0.5:
+      move_dist = -0.5
+  end
+  target_pose = pose_add(origin_pose, p[move_dist, 0, 0, 0, 0, 0])
+  movel(target_pose, a=1.0, v=0.5)
+end
+```"
+"Write a URScript function that blends between two linear motions using a blending radius. The function should take two destination poses, and radius parameter as input. Use the pose_trans function with TCP offsets.","","```URscript
+def blend_linear_motions(pose1_in, pose2_in, blend_radius):
+    local pose1 = pose_trans(pose1_in, get_tcp_offset())
+    local pose2 = pose_trans(pose2_in, get_tcp_offset())
+    movep(pose1, a=1.0, v=0.5, r=blend_radius)
+    movep(pose2, a=1.0, v=0.5, r=blend_radius)
+end
+```"
+"Implement a URScript function that simulates a pick-and-place operation using functions. It will incorporate approach, pick, place, and retract. The input consists of poses for both pick and place location as well as approach and retract moves with specific offsets.","","```URscript
+def pick_place_sim(pick_pose, place_pose):
+  local approach_offset = p[0, 0, 0.1, 0, 0, 0]
+  local retract_offset = p[0, 0, 0.15, 0, 0, 0]
+  def approach(target_pose):
+    movel(pose_add(target_pose,approach_offset), a=1.0, v=0.5)
+  end
+  def pick(target_pose):
+    movej(target_pose, a=1.0, v=0.5)
+    sleep(0.5) # Simulate pick gripper
+  end
+  def place(target_pose):
+    movej(target_pose, a=1.0, v=0.5)
+    sleep(0.5) # Simulate place action
+  end
+  def retract(target_pose):
+    movel(pose_add(target_pose, retract_offset), a=1.0, v=0.5)
+  end
+
+  approach(pick_pose)
+  pick(pick_pose)
+  retract(pick_pose)
+  approach(place_pose)
+  place(place_pose)
+  retract(place_pose)
+
+end
+```"
+You're given a URScript function with potential motion safety issues. Identify the issue and fix the script so the robot does not move with a high joint speed that exceeds a safety condition.,"```
+def unsafe_move():
+  movej(j[1,2,3,4,5,6], a=2.0, v=2.0)
+end
+```","```URscript
+def safe_move():
+  max_safe_joint_speed = 1.0 # Define a max safe joint speed
+  movej(j[1,2,3,4,5,6], a=2.0, v=min(2.0, max_safe_joint_speed)) # Limit the speed, but it respects the desired acceleration
+end
+```"
+"Generate a URScript routine that moves the robot in a circle located in the XY plane with a specified radius, center position, and using 12 steps to reach each position with blending motion.","```
+center_pose=p[0.3, 0.2, 0.1, 0, 0, 0]
+radius = 0.1
+```","```URscript
+def move_in_circle(center_pose, radius):
+  steps = 12
+  for i = 0 to (steps-1):
+    angle = (i/steps) * 2 * pi()
+    x = center_pose[0] + radius * cos(angle)
+    y = center_pose[1] + radius * sin(angle)
+    z = center_pose[2] # Keep z constant
+    target_pose = p[x, y, z, 0, 0, 0]
+    movep(target_pose, a=1.0, v=0.5, r=0.02)
+  end
+end
+```"
+Develop a URScript function that takes a joint position and a time in seconds and moves the robot using movej to that position slowly. The velocity must be calculated using the time provided.,"","```URscript
+def move_with_time_based_speed(target_joint_pos, time_s):
+    local start_joint_pos = get_joint_positions()
+    local joint_speed_diff = [0,0,0,0,0,0]
+    for i=0 to 5:
+       joint_speed_diff[i"
+"Create a URScript program that reads the current robot TCP pose, converts it to a string representation, and then displays it on the robot's log screen.",<no_input>,"```URscript
+def display_current_tcp_pose():
+    local current_pose = get_forward_kin()
+    local pose_string = to_str(current_pose)
+    popup(pose_string)
+    textmsg(pose_string)
+end
+```"
+"Write a URScript function that uses the 'movep' command to perform a linear motion with blending radius 'r' between two poses, while checking digital input 'input_pin'. If 'input_pin' is high, continue the motion; if low, terminate it.","```
+Given: 
+pose start_pose = p[0,0,0.1,0,0,0]
+pose end_pose = p[0.2,0,0.1,0,0,0]
+int input_pin = 0
+float r = 0.01
+```","```URscript
+def move_linear_with_input_check(start_pose, end_pose, input_pin, r):
+    while (True):
+        if (get_standard_digital_in(input_pin)):
+            movep(start_pose, end_pose, r)
+            start_pose = end_pose
+        else:
+            break
+        end
+    end
+end
+```"
+"Can you write a URScript program that detects when a fault occurs, and then use the `get_robot_mode()` function to check if the robot is in protective stop? Display an error message if that's the case.","","```URscript
+def check_protective_stop():
+    local prev_robot_mode = get_robot_mode()
+    while (True):
+        sync()
+        local current_robot_mode = get_robot_mode()
+        if (current_robot_mode != prev_robot_mode):
+            textmsg(""Robot mode changed from "",prev_robot_mode,"" to "",current_robot_mode)
+            if (current_robot_mode == 7):  # 7 indicates Protective Stop
+                textmsg(""Error: Robot in protective stop!"")
+            end
+            prev_robot_mode = current_robot_mode
+        end
+    end
+end
+```"
+"Create a URScript function that sets the robot tool TCP to a given pose, then retrieves the current tool TCP pose and compares it to the assigned pose.. Report the discrepancy.","```
+Given: 
+pose  new_tcp_pose = p[0.05, 0, 0.05, 0, 0 ,0]
+```","```URscript
+def check_tcp_pose(new_tcp_pose):
+    set_tcp(new_tcp_pose)
+    local current_tcp_pose = get_tcp_offset()
+    local tcp_dist=pose_dist(new_tcp_pose, current_tcp_pose)    
+    textmsg(""TCP difference from set_tcp:"", tcp_dist)
+end
+```"
+"Write a URScript function that reads the analog input of the robot, applying a scaling factor. Use the `read_analog_in` instruction to obtain the raw value from analog input pin 0 and then show the result of the scaling on the robot log screen.","```
+Given scale_factor = 2.5
+```","```URscript
+def scale_analog_input(scale_factor):
+    local analog_value_raw = read_analog_in(0)
+    local analog_value_scaled = analog_value_raw * scale_factor
+    textmsg(""Scaled analog value:"", analog_value_scaled)
+end
+```"
+Refactor the given URScript code segment to use a loop and a variable for a sequence of pose points instead of hardcoding each position for the motion commands. This makes the movements more scalable by using defined pose points in an array.,"```URscript
+def move_sequence_original():
+  local pose1 = p[0,0,0.1,0,0,0]
+  local pose2 = p[0.2,0,0.1,0,0,0]
+  local pose3 = p[0.2,0.2,0.1,0,0,0]
+  movej(get_inverse_kin(pose1), a=1, v=1)
+  movej(get_inverse_kin(pose2), a=1, v=1)
+  movej(get_inverse_kin(pose3), a=1, v=1)
+end
+```","```URscript
+def move_sequence_refactored():
+    local pose_array = [p[0,0,0.1,0,0,0], p[0.2,0,0.1,0,0,0], p[0.2,0.2,0.1,0,0,0]]
+    for pose_point in pose_array:
+        movej(get_inverse_kin(pose_point), a=1, v=1)
+    end
+end
+```"
+"Given a URscript program, add error handling to check if a robot move command results in an error. If an error occurs, display a message and stop the motion. Assume any move command can fail.","```URscript
+def risky_move():
+    local pose_1 = p[0.1,0.1,0.1,0,0,0]
+    movej(get_inverse_kin(pose_1), a=1,v=1)
+    local pose_2 = p[0.2,0.2,0.2,0,0,0]
+    movej(get_inverse_kin(pose_2), a=1,v=1)    
+end
+```","```URscript
+def safer_move():
+  local pose_1 = p[0.1,0.1,0.1,0,0,0]
+  if (not is_within_safety_limits(get_inverse_kin(pose_1))):
+        textmsg(""Error: First target outside safety limits"")
+        stopj(3.1416)
+        halt
+  else:
+    movej(get_inverse_kin(pose_1), a=1,v=1)
+  end
+  local pose_2 = p[0.2,0.2,0.2,0,0,0]
+  if (not is_within_safety_limits(get_inverse_kin(pose_2))):
+        textmsg(""Error: Second target outside of safety limits"")
+        stopj(3.1415)
+        halt
+  else:
+    movej(get_inverse_kin(pose_2), a=1,v=1)
+  end
+end
+```"
+Develop a URScript function that calculates the Euclidean distance between two given pose locations and reports it on the robot log screen.,"```
+Given pose_first = p[0,0,0,0,0,0] and pose_second = p[0.1,0,0.1,0,0,0]
+```","```URscript
+def calculate_distance(pose_first, pose_second):
+    local dist_value = pose_dist(pose_first,pose_second)
+    textmsg(""Distance Value:"" ,dist_value)
+end
+```"
+"Generate a URScript program that demonstrates how to toggle a digital output pin based on the status of a digital input. If the input (pin 0) is high, set the output (pin 1) high; if the input is low, set the output low.","","```URscript
+def toggle_output_based_on_input():
+    while (True):
+        if (get_standard_digital_in(0)):
+            set_standard_digital_out(1, True)
+        else:
+            set_standard_digital_out(1, False)
+        end
+	sync()
+    end
+end
+```"
+"Create a URScript function that uses a variable radius of the `circel` command for circular movements. The user should be able to specify the radius, start, mid, and end pose for each circle.","```
+Given: 
+float radius = 0.01
+pose start_pose = p[0,0,0.1,0,0,0]
+pose middle_pose = p[0.1,0.1,0.1,0,0,0]
+pose end_pose = p[0.2,0,0.1,0,0,0]
+```","```URscript
+def move_circle(radius, start_pose, middle_pose, end_pose):
+        local radius_value = radius
+        local start = start_pose
+        local middle = middle_pose
+        local end = end_pose
+        circle(start,middle,end,r = radius_value)
+end
+```"
+Write a function in URScript that checks whether the current robot speed exceeds a user-defined threshold. Use the function get_actual_tcp_speed() to obtain the speed and display a warning message on the log screen if the threshold is exceeded.,"```
+Given:
+float speed_threshold = 0.5
+```","```URscript
+def check_speed(speed_threshold):
+    local current_speed = get_actual_tcp_speed()
+    if (current_speed > speed_threshold):
+        textmsg(""Warning: current speed, "", current_speed, "", over the threshold,"", speed_threshold)
+    end
+end
+```"
+"Generate a URScript program that uses the `set_tool_voltage` instruction to set the tool voltage to 24 volts, then checks if the voltage is set correctly using the `get_tool_voltage` instruction. If the read voltage differs, display a warning on the log screen. .","","```URscript
+def verify_tool_voltage():
+    local target_voltage = 24
+    set_tool_voltage(target_voltage)
+    sleep(0.5)
+    local read_voltage = get_"
+Modify the provided URScript function to implement a linear move using `movel` which approaches to and departs back from `target_pose`. Use a relative motion to move from initial position near `target_pose`.,"```URscript
+def approach_and_retreat():
+  local target_pose = p[0.4, -0.3, 0.2, 0, 0, 0]
+  movel (target_pose, a=0.5, v=0.5)
+end
+```","```URscript
+def approach_and_retreat():
+  local target_pose = p[0.4, -0.3, 0.2, 0, 0, 0]
+  local approach_pose = pose_trans(target_pose, p[0,0,-0.1,0,0,0])
+  movel(approach_pose, a=0.5, v=0.5)
+  movel(target_pose, a=0.5, v=0.5)
+  movel(approach_pose,a=0.5, v=0.5)
+end
+```"
+"Given a URScript code snippet containing a loop, add a safety check using the `get_digital_in()` function with input 0 to abort the loop if the input is not active.","```URscript
+def perform_loop():
+  i=0
+  while i < 5:
+    textmsg(""Looping: "", i)
+    i=i+1
+    sleep(1)
+  end
+end
+```","```URscript
+def perform_loop():
+  i=0
+  while i < 5:
+    if not get_digital_in(0):
+      textmsg(""Safety abort!"")
+      break;
+    end
+    textmsg(""Looping: "", i)
+    i=i+1
+    sleep(1)
+  end
+end
+```"
+Create a URScript function that calculates the Euclidean distance between two given poses. The function should accept two pose variables as input and return the distance.,"","```URscript
+def calculate_distance(pose1, pose2):
+  local x1 = pose1[0]
+  local y1 = pose1[1]
+  local z1 = pose1[2]
+  local x2 = pose2[0]
+  local y2 = pose2[1]
+  local z2 = pose2[2]
+  local distance = sqrt(pow((x2 - x1), 2) + pow((y2 - y1), 2) + pow((z2 - z1), 2))
+  return distance
+end
+```"
+Implement a URScript function that moves a tool along a circular path defined by a center pose and a radius. Ensure the move is performed in a number of equal steps around the circle.,"center_pose = p[0.3,0,0.2, 0, 0, 0]; radius = 0.1; steps = 8.","```URscript
+def move_circular(center_pose, radius, steps):
+    for i = 0 to steps-1:
+        local angle = 2 * pi * i / steps
+        local x = center_pose[0] + radius * cos(angle)
+        local y = center_pose[1] + radius * sin(angle)
+        local z = center_pose[2]
+        local next_pose = p[x, y, z, center_pose[3], center_pose[4], center_pose[5]]
+        movel(next_pose, a=0.5, v=0.5)
+    end
+end
+center_pose = p[0.3,0,0.2, 0, 0, 0]
+radius =  0.1
+steps = 8
+move_circular(center_pose, radius, steps)
+```"
+"Refactor this URScript code to use a function for increased readability and reusability, also add an input parameter for velocity.","```URscript
+  target_pose = p[0.5, 0, 0.3, 0, 0, 0]
+  movel(target_pose, a=1, v=0.5)
+  target_pose = p[0.4, -0.1, 0.4, 0, 0, 0]
+  movel(target_pose, a=1, v=0.5)
+```","```URscript
+def move_to_pose(target_pose, vel):
+    movel(target_pose, a=1, v=vel)
+end
+
+  target_pose_1 = p[0.5, 0, 0.3, 0, 0, 0]
+  move_to_pose(target_pose_1, 0.5)
+  target_pose_2 = p[0.4, -0.1, 0.4, 0, 0, 0]
+  move_to_pose(target_pose_2, 0.5)
+```"
+Implement a URScript function that reads the force torque sensor values and displays them to the user interface also add a timeout for sensor communication errors.,"","```URscript
+def display_ft_sensor_data():
+  try:
+    timeout=3
+    start = get_time()
+    while(get_time() - start < timeout):
+        local ft_data = get_tcp_force()
+        textmsg(""Force X: "", ft_data[0], "" Y:"", ft_data[1], "" Z:"", ft_data[2], "" Torque X:"", ft_data[3], "" Y:"", ft_data[4], "" Z:"", ft_data[5])
+        sleep(0.1)
+    end
+      
+  catch e:
+    textmsg(""Error reading force torque sensor"",e)
+  end   
+end
+```"
+"Write a URScript function that takes a list of joint positions, moves the robot through them sequentially using `movej` or `movel`, and uses a global variable to indicate movement completion.","joint_positions = `[[-1.5, -1.5, -2, -0.8, 1.5, 0.0],[-1.6, -1.6, -2.1, -0.9, 1.6, 0.1]]`","```URscript
+global move_complete = False
+
+def move_through_joints(joint_positions):
+    global move_complete
+    for joint_target in joint_positions:
+        movej(joint_target, a=0.5, v=0.5)
+    end
+    move_complete = True
+end
+joint_positions = [[-1.5, -1.5, -2, -0.8, 1.5, 0.0],[-1.6, -1.6, -2.1, -0.9, 1.6, 0.1]]
+move_through_joints(joint_positions)
+```"
+"Generate URScript code that sets up a simple variable and then uses an if-else statement to conditionally move the robot based on its value, printing a status message.","","```URscript
+var condition = True
+
+if condition:
+  target_pose = p[0.5, 0, 0.3, 0, 0, 0]
+  movel(target_pose, a=1, v=0.5)
+  textmsg(""Condition was True, robot moved"")
+else:
+  textmsg(""Condition was False, robot did not move"")
+end
+```"
+The below URScript code contains a syntax error. Identify and fix the error to ensure the given code is syntactically correct and runnable.,"```URscript
+def invalid_function()
+ local position = p[0.1, 0.1, 0.1, 0, 0, 0]
+  move(position a=0.5, v=0.1)
+end
+```","```URscript
+def invalid_function()
+  local position = p[0.1, 0.1, 0.1, 0, 0, 0]
+  movel(position, a=0.5, v=0.1)
+end
+```"
+Write a function in URScript that logs the robot’s current TCP pose with a timestamp and appends it to a string variable. Use the variable to output to the user at the end.,"","```URscript
+def log_robot_poses():
+  local log_string = """"
+  for i=0 to 2:
+    local current_pose = get_forward_kin()
+    local timestamp = get_time()
+    log_string = log_string + ""Pose at time: "" + to_str(timestamp) + "" is: "" + to_str(current_pose) + ""\n""
+    sleep(0.5)
+  end
+  textmsg(log_string)
+end
+```"
+"Construct URScript code that implements a basic pick-and-place operation. Define two poses, move to the pick pose, simulate a gripper operation with sleep, move to the place pose, then retract back to the initial position.","","```URscript
+def pick_and_place():
+  local pick_pose = p[0.4, 0, 0.1, 0, 0, 0]
+  local place_pose = p[0.4, 0.2, 0.1, 0, 0, 0]
+  local initial_pose = p[0.5, 0, 0.3, 0, 0, 0]
+
+  movel(initial_pose, a=0.2, v=0.5)
+  movel(pick_pose, a=0.2, v=0.5)
+  sleep(1) # Simulate gripper close
+  movel(place_pose, a=0.2, v=0.5)
+  sleep(1)  # Simulate gripper open
+   movel(initial_pose, a=0.2, v=0.5)
+end
+```"
+Optimize the performance of the URScript code that moves between different waypoints by reducing the unnecessary waits. The robot has a blend radius of 0.02 meters. Use a blend radius when moving between waypoints where possible.,"```URscript
+def move_between_waypoints():
+  local waypoint1 = p[0.5,0,0.2,0,0,0]
+  movel(waypoint1,a=0.5,v=0.5)
+  sleep(0.5)
+  local waypoint2 = p[0.4,0.1,0.3,0,0,0]
+  movel(waypoint2,a=0.5,v=0.5)
+  sleep(0.5)
+  local waypoint3 = p[0.3, -0.1, 0.25, 0, 0, 0]
+  movel(waypoint3, a=0.5, v=0.5)
+end
+```","```URscript
+def move_between_waypoints():
+  local waypoint1 = p[0.5,0,0.2,0,0,0]
+  local waypoint2 = p[0.4,0.1,0.3,0,0,0]
+   local waypoint3 = p[0.3, -0.1, 0.25, 0, 0, 0]
+  movej"
