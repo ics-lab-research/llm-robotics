@@ -74,3 +74,20 @@ def post_process_gemini_response(num_prompt_instructions, response):
         instructions.append({"instruction": inst, "input": input, "output": output})
 
     return instructions
+
+
+# TODO: use regex to detect patterns instead
+def detect_try_catch_keywords():
+    pass
+
+
+def detect_for_keyword():
+    pass
+
+
+def detect_missing_code():
+    pass
+
+
+def detect_end_missing():
+    pass

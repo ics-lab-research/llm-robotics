@@ -6,6 +6,7 @@ python -m generate_instruction_gemini generate_instruction_following_data \
   --output_dir ./ \
   --num_instructions_to_generate 10 \
   --model_name="text-davinci-003" \
+  --attempts=0,  # change name of output, testing purpose
 """
 
 import fire
@@ -43,18 +44,18 @@ def generate_instruction_following_data(
     seed_tasks_path="./prompts/seed_tasks.json",
     generated_instruction_path="./results/gen_instructions.json",
     # filtered_instruction_path="./prompts/gen_instructions.json",
-    num_instructions_to_generate=100,  # 20K samples
+    num_instructions_to_generate=20000,  # 20K samples
     model_name="gemini-2.0-flash-exp",  # TODO: change to pro
     num_prompt_instructions=3,
     request_batch_size=5,
     temperature=1.0,
     top_p=1.0,
     num_cpus=16,
-    attempts=0,  # change name of output, testing purpose
+    # attempts=0,  # change name of output, testing purpose
 ):
     # change name of output
-    if attempts != 0:
-        generated_instruction_path = f"./results/gen_instructions_{attempts}.json"
+    # if attempts != 0:
+    #     generated_instruction_path = "./results/gen_instructions.json"
 
     # init some variable
     request_idx = 0
@@ -120,6 +121,10 @@ def generate_instruction_following_data(
 
         total = len(instruction_data)
         keep = 0
+
+        # TODO: try to filter samples when code not good
+        # for instruction_data_entry in instruction_data:
+        #     output = instruction_data_entry["output"]
 
         # NOTE: try to caculate rouge score
         for instruction_data_entry in instruction_data:
