@@ -77,6 +77,10 @@ def post_process_gemini_response(num_prompt_instructions, response):
 
 
 # TODO: use regex to detect patterns instead
+def extracting_urscript_block():
+    pass
+
+
 def detect_try_catch_keywords():
     pass
 
