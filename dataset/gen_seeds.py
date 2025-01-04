@@ -3,7 +3,9 @@ import json
 
 
 def read_file_content(file_path):
-    """Read the content of a file or return <no_input> if the file does not exist."""
+    """
+    Read the content of a file or return <no_input> if the file does not exist.
+    """
     if os.path.exists(file_path):
         with open(file_path, "r", encoding="utf-8") as file:
             return file.read().strip()
@@ -36,7 +38,9 @@ def create_samples_json(tasks_folder, output_json_file):
                     "instruction": read_file_content(
                         os.path.join(instruction_folder, sample_file)
                     ),
-                    "input": read_file_content(os.path.join(input_folder, sample_file)),
+                    "input": read_file_content(
+                        os.path.join(input_folder, sample_file)
+                    ),
                     "output": read_file_content(
                         os.path.join(output_folder, sample_file)
                     ),
