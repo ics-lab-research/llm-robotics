@@ -1,2 +1,2 @@
 nltk==3.9.1
-ur_rtde
+ur-rtde==1.6.0
