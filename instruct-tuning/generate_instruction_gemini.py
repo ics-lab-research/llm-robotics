@@ -22,7 +22,7 @@ from rouge_score import rouge_scorer
 from functools import partial
 from multiprocessing import Pool
 
-from utils_gemini import (
+from utils import (
     seed_instruction_data_loader,
     machine_instruction_data_loader,
     encode_prompt,
@@ -71,7 +71,8 @@ def generate_instruction_following_data(
     if machine_instruction_data:
         progress_bar.update(len(machine_instruction_data))
 
-    # first we tokenize all the seed instructions and generated machine instructions
+    # first we tokenize all the seed instructions and
+    # generated machine instructions
     all_instructions = [d["instruction"] for d in seed_instruction_data] + [
         d["instruction"] for d in machine_instruction_data
     ]

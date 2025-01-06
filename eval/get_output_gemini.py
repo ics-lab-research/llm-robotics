@@ -6,21 +6,17 @@ from tqdm import tqdm
 from dotenv import load_dotenv
 
 from utils import (
-    test_instruction_data_loader,
+    instruction_data_loader,
     merge_instruction_input,
     remove_endoftext,
+    machine_output_data_loader,
+    jdump,
 )
 
 # load from .env file
 load_dotenv(dotenv_path="../.env")
 
 
-# create hello function
-def hello(name):
-    print(f"Hello, {name}!")
-
-
-# task 1: get output of "who are you first"
 def get_output_from_colab(instruction: str) -> str:
     # Determine the URL based on the NGROK_URL environment variable
     ngrok_url = os.environ.get("NGROK_URL")
@@ -47,31 +43,38 @@ def get_output_from_colab(instruction: str) -> str:
 
     except requests.exceptions.RequestException as e:
         print(f"An error occurred: {e}")
-        return None
+        return ""
 
 
-# task 2: save output to json
 # use for-loop to get instructions
-def get_output(output_path: str = "./results/output.json"):
-    data = test_instruction_data_loader()
+def get_output(
+    output_path: str = "./results/output.json",
+):
+    instruction_data = instruction_data_loader()
+    machine_output_data = machine_output_data_loader()
+    progress_bar = tqdm(total=len(instruction_data))
 
-    # to prevent error, we count generated output
+    if machine_output_data:
+        progress_bar.update(len(machine_output_data))
 
-    # dump to json file, this json file include instruction, input and output
-    with open(output_path, "w") as f:
-        # output_data = []
-        for item in tqdm(data, desc="Getting output"):
-            new_instruction = merge_instruction_input(item)
-            output = get_output_from_colab(new_instruction)
+    while len(machine_output_data) < len(instruction_data):
+        idx = len(machine_output_data)
+        item = instruction_data[idx]
+        new_instruction = merge_instruction_input(item)
+        output = get_output_from_colab(new_instruction)
 
-            output_data.append(
-                {
-                    "instruction": item["instruction"],
-                    "input": item["input"],
-                    "output": remove_endoftext(output),
-                }
-            )
-        json.dump(output_data, f, indent=4)
+        machine_output_data.append(
+            {
+                "instruction": item["instruction"],
+                "input": item["input"],
+                "output": remove_endoftext(output),
+            }
+        )
+
+        # try to save data
+        jdump(machine_output_data, output_path)
+
+        progress_bar.update(1)
 
 
 def main(task, **kwargs):
