@@ -11,6 +11,7 @@ from utils import (
     remove_endoftext,
     machine_output_data_loader,
     jdump,
+    extract_first_code_block,
 )
 
 # load from .env file
@@ -67,7 +68,8 @@ def get_output(
             {
                 "instruction": item["instruction"],
                 "input": item["input"],
-                "output": remove_endoftext(output),
+                # "output": remove_endoftext(output),
+                "output": extract_first_code_block(remove_endoftext(output)),
             }
         )
 

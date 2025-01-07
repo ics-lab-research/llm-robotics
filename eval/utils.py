@@ -1,6 +1,7 @@
 import io
 import os
 import json
+import re
 from typing import Dict
 
 # import tokenize
@@ -98,3 +99,10 @@ def jdump(obj, f, mode="w", indent=4, default=str):
     else:
         raise ValueError(f"Unexpected type: {type(obj)}")
     f.close()
+
+
+def extract_first_code_block(text):
+    match = re.search(r"```(.*?)\n```", text, re.DOTALL)
+    if match:
+        return f"```{match.group(1)}\n```"
+    return None

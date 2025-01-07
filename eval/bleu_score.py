@@ -41,11 +41,11 @@ def calculate_code_bleu(reference_code, candidate_code, n=4):
     return bleu_score
 
 
-def benchmark_bleu_score():
+def benchmark_bleu_score(instruction_path="./results/output_qwen7b_coder.json"):
     bleu_scores = []
     reference_code_data = instruction_data_loader()
     hypothesis_code_data = instruction_data_loader(
-        instruction_path="./results/output_qwen7b_coder.json"
+        instruction_path=instruction_path
     )
 
     for idx, item in enumerate(reference_code_data):
